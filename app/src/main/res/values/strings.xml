@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">PracticaRominaLuppi</string>
+
+    <string name="title">Facturas</string>
 </resources>

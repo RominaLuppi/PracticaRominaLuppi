@@ -40,6 +40,8 @@ android {
         compose = true
 
     }
+
+
 }
 
 dependencies {
@@ -72,6 +74,7 @@ dependencies {
 
     //Room
     implementation(libs.androidx.room.runtime)
+    //ViewModel
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     // Procesador de anotaciones para Room
     ksp(libs.androidx.room.compiler)

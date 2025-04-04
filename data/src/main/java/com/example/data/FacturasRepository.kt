@@ -1,6 +1,7 @@
 package com.example.data
 
-import com.example.practicarominaluppi.model.Factura
+import com.example.domain.Factura
+
 
 interface FacturasRepository {
 
