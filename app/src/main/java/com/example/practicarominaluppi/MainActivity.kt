@@ -11,6 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.core.FacturaScreen
+import com.example.domain.Factura
 import com.example.practicarominaluppi.ui.theme.PracticaRominaLuppiTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,9 +21,17 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PracticaRominaLuppiTheme {
+
+                //se crea una factura ficticia
+//                val facturas = listOf(
+//                    Factura(estado = "pagada", importe = 100.0, fecha = "21/08/2000"),
+//                    Factura(estado = "pagada", importe = 130.0, fecha = "21/10/2000"),
+//                    Factura(estado = "pendiente", importe = 5000.0, fecha = "01/08/2000")
+//                )
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                    FacturaScreen(
+
+                        onFilterClick = {},
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -30,18 +40,3 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    PracticaRominaLuppiTheme {
-        Greeting("Android")
-    }
-}

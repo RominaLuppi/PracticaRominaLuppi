@@ -50,6 +50,10 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation (libs.androidx.material)
     implementation(project(":domain"))
+    implementation (libs.ui) // Composable UI
+    implementation (libs.material3) // Material3
+    implementation (libs.ui.tooling.preview)
+    implementation (libs.androidx.foundation)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

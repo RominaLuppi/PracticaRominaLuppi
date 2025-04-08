@@ -1,6 +1,6 @@
 package com.example.data
 
-interface FacturasApiService {
-    @GET("facturas")
-    suspend fun getFacturas(): List<Factura>
-}
+//interface FacturasApiService {
+//    @GET("facturas")
+//    suspend fun getFacturas(): List<EntidadFactura>
+//}

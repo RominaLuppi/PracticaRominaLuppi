@@ -1,4 +1,5 @@
 package com.example.practicarominaluppi
+/*
 
 import android.content.Context
 import androidx.room.Room
@@ -12,7 +13,9 @@ import kotlinx.serialization.json.Json
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import okhttp3.MediaType.Companion.toMediaType
 
-/** interfaz que actúa como contenedor de las dependencias */
+*/
+/** interfaz que actúa como contenedor de las dependencias *//*
+
 interface AppContainer {
     val facturasRepository: FacturasRepository
 }
@@ -46,4 +49,4 @@ class DefaultAppContainer(private val context: Context) : AppContainer{
     override val facturasRepository: FacturasRepository by lazy{
         DefaultFacturasRepository(retrofitService, facturasDao)
     }
-}
+}*/

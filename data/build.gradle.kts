@@ -42,6 +42,7 @@ dependencies {
     testImplementation(libs.junit)
     //Room
     implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     // Procesador de anotaciones para Room
     ksp(libs.androidx.room.compiler)

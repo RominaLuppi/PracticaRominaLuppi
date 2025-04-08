@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     // Habilita el procesador de anotaciones en Kotlin
     id("com.google.devtools.ksp")
+    id ("kotlin-android")
 }
 
 android {
@@ -54,6 +55,11 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.ui.tooling)
+    implementation(libs.androidx.foundation)
+
+
+    implementation (libs.kotlin.stdlib)
 
     implementation(project(":data"))
     implementation(project(":core"))
@@ -64,7 +70,7 @@ dependencies {
     // Retrofit with Scalar Converter
     implementation(libs.converter.scalars)
     implementation(libs.converter.gson)
-    implementation(libs.androidx.room.runtime)
+
     implementation(libs.retrofit2.kotlinx.serialization.converter)
     implementation(libs.retrofit.v290)
     implementation(libs.kotlinx.serialization.json)  // Agrega la dependencia de Kotlinx Serialization
