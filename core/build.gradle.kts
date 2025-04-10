@@ -44,6 +44,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
+    implementation (libs.androidx.navigation.compose)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
@@ -52,8 +53,17 @@ dependencies {
     implementation(project(":domain"))
     implementation (libs.ui) // Composable UI
     implementation (libs.material3) // Material3
+
+    //implementation (libs.androidx.material3.datepicker)
+    implementation (libs.androidx.material3.v121)
     implementation (libs.ui.tooling.preview)
     implementation (libs.androidx.foundation)
+   // implementation (libs.androidx.lifecycle.livedata.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose.v262)
+
+    implementation (libs.androidx.runtime.livedata)
+    implementation (libs.androidx.lifecycle.viewmodel.compose)
+   // implementation(libs.androidx.lifecycle.livedata.compose.v100alpha01)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

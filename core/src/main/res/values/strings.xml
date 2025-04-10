@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="title_topBar">Consumo</string>
+    <string name="filter_description">Filtrar</string>
+    <string name="title_factura">Facturas</string>
+
+    <string name="title_dialog">Información</string>
+    <string name="message_dialog">Esta funcionalidad aún no está disponible</string>
+    <string name="button_dialog">Cerrar</string>
+
+    <string name="title_filtros">Filtrar facturas</string>
+    <string name="subtitle_filtros">Con fecha de emisión</string>
+    <string name="close_button">Cerrar</string>
+    <string name="fecha_desde">Desde:</string>
+    <string name="fecha_hasta">Hasta:</string>
+    <string name="fecha_select">Seleccionar fecha:</string>
+    <string name="btn_fecha">día/mes/año</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="text_filtos">Por un importe</string>
+
+
+</resources>
