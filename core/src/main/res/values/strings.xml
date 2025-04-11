@@ -18,7 +18,17 @@
     <string name="btn_fecha">día/mes/año</string>
     <string name="aceptar">Aceptar</string>
     <string name="cancelar">Cancelar</string>
-    <string name="text_filtos">Por un importe</string>
+    <string name="text_por_importe">Por un importe</string>
+    <string name="min_slider">1€</string>
+    <string name="max_slider">300€</string>
 
+    <string name="text_por_estado">Por estado</string>
+    <string name="pagadas">Pagadas</string>
+    <string name="anuladas">Anuladas</string>
+    <string name="cuota_fija">Cuota Fija</string>
+    <string name="pendientes">Pendientes de pago</string>
+    <string name="plan_pago">Plan de pago</string>
 
+    <string name="btn_aplicar">Aplicar</string>
+    <string name="btn_eliminar_filtros">Eliminar filtros</string>
 </resources>
