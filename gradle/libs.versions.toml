@@ -1,5 +1,7 @@
 [versions]
+accompanistPager = "0.32.0"
 agp = "8.9.1"
+androidxComposeMaterial3Material3 = "1.1.0"
 androidxMaterial3 = "1.0.0"
 androidxMaterial3Version = "1.2.1"
 androidxUi = "1.4.0"
@@ -43,6 +45,7 @@ uiToolingPreviewVersion = "<version>"
 uiVersion = "<version>"
 
 [libraries]
+accompanist-pager = { module = "com.google.accompanist:accompanist-pager", version.ref = "accompanistPager" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
 androidx-foundation-vversion = { module = "androidx.compose.foundation:foundation", version.ref = "foundationVersion" }
@@ -55,6 +58,7 @@ androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-view
 androidx-material = { module = "androidx.compose.material:material" }
 androidx-material3-datepicker = { module = "androidx.compose.material3:material3-datepicker", version.ref = "material3Datepicker" }
 androidx-material3-v100 = { module = "androidx.compose.material3:material3", version.ref = "androidxMaterial3" }
+androidx-material3-v110 = { module = "androidx.compose.material3:material3", version.ref = "androidxComposeMaterial3Material3" }
 androidx-material3-v121 = { module = "androidx.compose.material3:material3", version.ref = "androidxMaterial3Version" }
 androidx-material3-vversion = { module = "androidx.compose.material3:material3", version.ref = "material3Version" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }

@@ -64,6 +64,8 @@ dependencies {
     implementation (libs.androidx.runtime.livedata)
     implementation (libs.androidx.lifecycle.viewmodel.compose)
    // implementation(libs.androidx.lifecycle.livedata.compose.v100alpha01)
+    implementation(libs.accompanist.pager)
+    implementation(libs.androidx.material3.v110)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

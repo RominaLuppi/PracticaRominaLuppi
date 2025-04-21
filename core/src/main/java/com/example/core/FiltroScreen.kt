@@ -91,7 +91,7 @@ fun FiltrosScreen(
                         color = Color.Gray,
                         fontSize = 16.sp
                     )
-                    CalendFechaDesde()
+                    CalendFechaDesde(viewModel)
                 }
 
                 Column() {
@@ -101,7 +101,7 @@ fun FiltrosScreen(
                         color = Color.Gray,
                         fontSize = 16.sp
                     )
-                    CalendFechaHasta()
+                    CalendFechaHasta(viewModel)
                 }
             }
             Divider(
@@ -228,7 +228,7 @@ fun SeleccionarEstado(viewModel: FacturaViewModel = viewModel()) {
     }
 }
 @Composable
-fun CalendFechaDesde(viewModel: FacturaViewModel = viewModel()){
+fun CalendFechaDesde(viewModel: FacturaViewModel){
     val selectedDate = viewModel.fechaDesde
     var showDate by remember { mutableStateOf(false) }
 
@@ -260,9 +260,8 @@ fun CalendFechaDesde(viewModel: FacturaViewModel = viewModel()){
 
 @Composable
 fun CalendFechaHasta(
-    modifier: Modifier = Modifier,
-    viewModel: FacturaViewModel = viewModel()
-    ) {
+    //modifier: Modifier = Modifier,
+    viewModel: FacturaViewModel) {
     val selectedDate = viewModel.fechaHasta
     var showDate by remember { mutableStateOf(false) }
 

@@ -31,4 +31,29 @@
 
     <string name="btn_aplicar">Aplicar</string>
     <string name="btn_eliminar_filtros">Eliminar filtros</string>
+
+    <string name="topBar_smart_solar">Atrás</string>
+    <string name="title_smart_solar">Smart Solar</string>
+
+    <string name="text_mi_instalacion">Aquí tienes los datos de tu instalación fotovoltaica en tiempo real.</string>
+    <string name="text_smart_solar">Autoconsumo: </string>
+    <string name="porcentaje_smart_solar">92%</string>
+
+
+    <string name="title_inicio">Inicio</string>
+    <string name="btn_home_facturas">Facturas</string>
+    <string name="btn_home_smart_solar">Smart Solar</string>
+    <string name="image_mi_instalación">Detalle del consumo en watios</string>
+
+    <string name="text_energia">Página en construcción</string>
+    <string name="detalle_energia">Estamos trabajando en mejorar la App.
+        Tus paneles solares siguen produciendo, en breve podrás seguir viendo tu producción solar. Sentimos las molestias.</string>
+
+    <string name="text_cau">CAU (Código Autoconsumo)</string>
+    <string name="text_estado_solicitud">Estado solicitud alta autoconsumidor</string>
+    <string name="text_tipo">Tipo autoconsumo</string>
+    <string name="text_compensacion">Compensación de excedentes</string>
+    <string name="text_potencia">Potencia de instalación</string>
+
+
 </resources>
