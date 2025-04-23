@@ -61,7 +61,7 @@ import com.example.domain.SmartDetalleTab
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SmartSolarScreen(
-//    viewModel: SmartSolarViewModel,
+//  viewModel: SmartSolarViewModel,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     navController: NavController,
@@ -331,9 +331,7 @@ fun TabDetallesView() {
     }
     if (showDialog) {
         InfoDialog(
-            onDismiss = {
-                showDialog = false
-            }
+            onDismiss = {showDialog = false}
         )
     }
 
@@ -375,8 +373,6 @@ fun TabEnergiaView() {
     }
 
 }
-
-
 @Composable
 fun TabMiInstalacionview() {
     Column(

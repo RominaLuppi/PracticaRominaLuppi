@@ -1,19 +1,38 @@
 package com.example.core
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.domain.Factura
+import kotlinx.coroutines.launch
 import java.util.EnumSet.of
 
 class FacturaViewModel: ViewModel() {
 
-    private val _facturas = MutableLiveData<List<Factura>>(emptyList())
-    val facturas: LiveData<List<Factura>> get() = _facturas
+//    private val _facturas = MutableLiveData<List<Factura>>(emptyList())
+//    val facturas: LiveData<List<Factura>> get() = _facturas
 
+    var facturas by mutableStateOf(listOf<Factura>())
+        private set
+
+    init {
+        viewModelScope.launch {
+            facturas = listOf(
+                Factura("pendiente", 30.30, "21/09/2020"),
+                Factura("pagada", 100.89, "30/08/2025"),
+                Factura("pagada", 350.89, "30/08/2025"),
+                Factura("pagada", 50.89, "30/08/2025"),
+                Factura("pagada", 100.89, "30/08/2025"),
+                Factura("pagada", 350.89, "09/08/2025"),
+                Factura("pendiente", 50.89, "30/08/2025"),
+            )
+        }
+    }
 
     var fechaDesde by mutableStateOf<Long?>(null)
         private set
@@ -52,7 +71,12 @@ class FacturaViewModel: ViewModel() {
 
     fun ResetearCheckBox(){
         checkedState = List(5) {false}
+    }
+
+    fun FiltrarFacturas() {
 
     }
+
+
 
 }

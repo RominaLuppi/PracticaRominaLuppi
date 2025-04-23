@@ -15,6 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.core.FacturaScreen
+import com.example.core.FacturaViewModel
 import com.example.core.FiltrosScreen
 import com.example.core.HomeScreen
 import com.example.core.SmartSolarScreen
@@ -25,6 +26,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
 
             PracticaRominaLuppiTheme {
@@ -38,6 +40,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainNavigation() {
     val navController = rememberNavController()
+    val facturaViewModel: FacturaViewModel = viewModel()
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 
@@ -52,14 +55,15 @@ fun MainNavigation() {
             }
             composable("FacturaScreen") {
                 FacturaScreen(
-                    viewModel = viewModel(),
-                    onFilterClick = { navController.navigate("FiltroScreen") }
+                    viewModel = facturaViewModel,
+                    onFilterClick = { navController.navigate("FiltroScreen")},
+                    navController = navController
                 )
             }
             composable("FiltroScreen") {
                 FiltrosScreen(
-                    viewModel = viewModel(),
-                    navController = navController
+                   viewModel = facturaViewModel,
+                   navController = navController
                 )
             }
             composable("SmartSolarScreen") { backStackEntry ->
@@ -69,7 +73,7 @@ fun MainNavigation() {
                     contentPadding = PaddingValues(),
                     navController = navController,
                     onFilterClick = { },
-//                    viewModel = TODO(),
+//                    viewModel = TODO,
                 )
             }
         }

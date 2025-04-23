@@ -61,6 +61,9 @@
     de tu comunidad autónoma y distribuidora.</string>
     <string name="btn_info">Aceptar</string>
 
+    <string name="title_dialog_filtro">Información</string>
+    <string name="text_dialog_filtro">No se ha encontrado ninguna factura.</string>
+
 
 
 </resources>

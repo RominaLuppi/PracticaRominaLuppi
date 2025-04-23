@@ -27,6 +27,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -40,10 +41,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.domain.Factura
-import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,12 +51,13 @@ fun FacturaScreen(
     viewModel: FacturaViewModel,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
+    navController: NavController,
     onFilterClick: () -> Unit //para hacer clickeable el icono del filtro
 
 ) {
 
     var showDialog by remember { mutableStateOf(false) } //visibilidad del popup
-    val facturas by viewModel.facturas.observeAsState(emptyList())
+//    val facturas by viewModel.facturas.observeAsState(emptyList())
 
     Scaffold(
         topBar = {
@@ -71,16 +71,22 @@ fun FacturaScreen(
                             text = stringResource(R.string.title_topBar),
                             color = colorResource(R.color.screen_fact_color),
                             fontSize = 18.sp,
+                            modifier = Modifier.clickable{navController.popBackStack()}
                         )
                     }
                 },
                 navigationIcon = {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "back",
-                        tint = colorResource(R.color.screen_fact_color)
+                    IconButton(onClick = {
+                        navController.navigate("HomeScreen")
+                    }){
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "back",
+                            tint = colorResource(R.color.screen_fact_color)
 
-                    )
+                        )
+                    }
+
                 },
                 actions = {
                     IconButton(onClick = onFilterClick) {
@@ -110,16 +116,20 @@ fun FacturaScreen(
             )
 
             FacturasList(
-                items = listOf(
-                    Factura("pendiente", 30.30, "21/09/2020"),
-                    Factura("pagada", 100.89, "30/08/2025"),
-                    Factura("pagada", 350.89, "30/08/2025"),
-                    Factura("pagada", 50.89, "30/08/2025"),
-                ),
+//                items = listOf(
+//                    Factura("pendiente", 30.30, "21/09/2020"),
+//                    Factura("pagada", 100.89, "30/08/2025"),
+//                    Factura("pagada", 350.89, "30/08/2025"),
+//                    Factura("pagada", 50.89, "30/08/2025"),
+//                    Factura("pagada", 100.89, "30/08/2025"),
+//                    Factura("pagada", 350.89, "09/08/2025"),
+//                    Factura("pendiente", 50.89, "30/08/2025"),
+//                ),
+                viewModel = viewModel,
                 modifier = Modifier.padding(top = 16.dp, start = 16.dp),
                 onClick = {
                     showDialog = true
-                },
+                }
             )
         }
     }
@@ -134,10 +144,10 @@ fun FacturaScreen(
 
 @Composable
 fun FacturasList(
-    items: List<Factura>,
+//    items: List<Factura>,
     onClick: () -> Unit,
     modifier: Modifier,
-
+    viewModel: FacturaViewModel
     ) {
     LazyColumn(
         modifier = Modifier
@@ -145,7 +155,8 @@ fun FacturasList(
             .padding(top = 16.dp, start = 8.dp)
 
     ) {
-        items(items) { factura ->
+//        items(items) { factura ->
+        items(viewModel.facturas) { factura ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
