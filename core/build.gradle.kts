@@ -66,6 +66,9 @@ dependencies {
    // implementation(libs.androidx.lifecycle.livedata.compose.v100alpha01)
     implementation(libs.accompanist.pager)
     implementation(libs.androidx.material3.v110)
+    // Hilt
+//    implementation (libs.hilt.android)
+//    implementation (libs.hilt.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

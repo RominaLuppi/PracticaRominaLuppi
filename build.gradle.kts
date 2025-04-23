@@ -3,7 +3,11 @@ buildscript {
     extra.apply {
         set("lifecycle_version", "2.8.7")
         set("retrofit2_version", "2.11.0")
+
     }
+   /* dependencies {
+        classpath (libs.hilt.android.gradle.plugin)
+    }*/
 }
 
 plugins {

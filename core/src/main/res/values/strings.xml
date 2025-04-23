@@ -54,6 +54,13 @@
     <string name="text_tipo">Tipo autoconsumo</string>
     <string name="text_compensacion">Compensación de excedentes</string>
     <string name="text_potencia">Potencia de instalación</string>
+    <string name="info">Información</string>
+
+    <string name="title_info">Estado solicitud autoconsumo</string>
+    <string name="detale_info">El tiempo estimado de activación de tu consumo es de 1 a 2 meses, éste variará en función
+    de tu comunidad autónoma y distribuidora.</string>
+    <string name="btn_info">Aceptar</string>
+
 
 
 </resources>

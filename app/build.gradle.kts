@@ -5,6 +5,8 @@ plugins {
     // Habilita el procesador de anotaciones en Kotlin
     id("com.google.devtools.ksp")
     id ("kotlin-android")
+    id ("kotlin-kapt") // Necesario para la anotación @Inject
+//    id ("dagger.hilt.android.plugin") // Hilt
 }
 
 android {
@@ -64,7 +66,6 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
-    //implementation (libs.androidx.material3.datepicker)
     implementation (libs.androidx.material3.v121)
     implementation(libs.ui.tooling)
     implementation(libs.androidx.foundation)
@@ -94,6 +95,11 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     // Procesador de anotaciones para Room
     ksp(libs.androidx.room.compiler)
+    // Hilt
+//    implementation (libs.hilt.android)
+//    implementation (libs.hilt.compiler)
+//    implementation(libs.androidx.hilt.navigation.compose)
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

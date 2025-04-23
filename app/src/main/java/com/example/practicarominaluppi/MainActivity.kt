@@ -20,6 +20,7 @@ import com.example.core.HomeScreen
 import com.example.core.SmartSolarScreen
 import com.example.practicarominaluppi.ui.theme.PracticaRominaLuppiTheme
 
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,13 +62,14 @@ fun MainNavigation() {
                     navController = navController
                 )
             }
-            composable("SmartSolarScreen") {
+            composable("SmartSolarScreen") { backStackEntry ->
+//                val viewModel: SmartSolarViewModel = hiltViewModel(backStackEntry)
                 SmartSolarScreen(
                     modifier = Modifier,
                     contentPadding = PaddingValues(),
                     navController = navController,
-                    onFilterClick = {  }
-
+                    onFilterClick = { },
+//                    viewModel = TODO(),
                 )
             }
         }
