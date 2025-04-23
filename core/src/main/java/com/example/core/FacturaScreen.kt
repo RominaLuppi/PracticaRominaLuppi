@@ -57,7 +57,6 @@ fun FacturaScreen(
 ) {
 
     var showDialog by remember { mutableStateOf(false) } //visibilidad del popup
-//    val facturas by viewModel.facturas.observeAsState(emptyList())
 
     Scaffold(
         topBar = {
@@ -116,15 +115,6 @@ fun FacturaScreen(
             )
 
             FacturasList(
-//                items = listOf(
-//                    Factura("pendiente", 30.30, "21/09/2020"),
-//                    Factura("pagada", 100.89, "30/08/2025"),
-//                    Factura("pagada", 350.89, "30/08/2025"),
-//                    Factura("pagada", 50.89, "30/08/2025"),
-//                    Factura("pagada", 100.89, "30/08/2025"),
-//                    Factura("pagada", 350.89, "09/08/2025"),
-//                    Factura("pendiente", 50.89, "30/08/2025"),
-//                ),
                 viewModel = viewModel,
                 modifier = Modifier.padding(top = 16.dp, start = 16.dp),
                 onClick = {
@@ -144,19 +134,19 @@ fun FacturaScreen(
 
 @Composable
 fun FacturasList(
-//    items: List<Factura>,
     onClick: () -> Unit,
     modifier: Modifier,
     viewModel: FacturaViewModel
     ) {
+    //val state =
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 16.dp, start = 8.dp)
 
     ) {
-//        items(items) { factura ->
-        items(viewModel.facturas) { factura ->
+
+        items(viewModel.state.facturaList) { factura ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

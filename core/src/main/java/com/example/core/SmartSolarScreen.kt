@@ -93,7 +93,7 @@ fun SmartSolarScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        navController.navigate("HomeScreen")
+                        navController.popBackStack()
                     }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,

@@ -16,6 +16,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.core.FacturaScreen
 import com.example.core.FacturaViewModel
+import com.example.core.FiltroViewModel
 import com.example.core.FiltrosScreen
 import com.example.core.HomeScreen
 import com.example.core.SmartSolarScreen
@@ -41,6 +42,7 @@ class MainActivity : ComponentActivity() {
 fun MainNavigation() {
     val navController = rememberNavController()
     val facturaViewModel: FacturaViewModel = viewModel()
+    val filtroViewModel: FiltroViewModel = viewModel()
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 
@@ -62,7 +64,7 @@ fun MainNavigation() {
             }
             composable("FiltroScreen") {
                 FiltrosScreen(
-                   viewModel = facturaViewModel,
+                   viewModel = filtroViewModel,
                    navController = navController
                 )
             }

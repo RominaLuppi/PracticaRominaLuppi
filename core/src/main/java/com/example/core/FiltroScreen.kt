@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.domain.Factura
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -37,7 +36,7 @@ import java.util.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FiltrosScreen(
-    viewModel: FacturaViewModel,
+    viewModel: FiltroViewModel,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     navController: NavController
@@ -124,7 +123,7 @@ fun FiltrosScreen(
                 fontWeight = FontWeight.Bold
             )
 
-            SeleccionarImporte(importeMax = 300.0f)
+            SeleccionarImporte(importeMax = 300.0f, viewModel)
 
             Divider(
                 modifier = Modifier.padding(start = 16.dp, top = 30.dp, end = 16.dp),
@@ -132,7 +131,7 @@ fun FiltrosScreen(
                 thickness = 1.dp,
                 startIndent = 0.dp
             )
-            SeleccionarEstado()
+            SeleccionarEstado(viewModel)
 
             Column(
                 modifier = Modifier
@@ -140,8 +139,8 @@ fun FiltrosScreen(
                     .padding(top = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                AplicarFiltros()
-                EliminarFiltros()
+                AplicarFiltros(viewModel)
+                EliminarFiltros(viewModel)
             }
 
         }
@@ -150,8 +149,10 @@ fun FiltrosScreen(
 }
 
 @Composable
-fun AplicarFiltros(viewModel: FacturaViewModel = viewModel()) {
-    val factura = listOf<Factura>()
+fun AplicarFiltros(viewModel: FiltroViewModel) {
+
+    val facturaFiltrada = listOf<FacturaFiltroState>()
+
     var showDialog by remember { mutableStateOf(false) }
 
     if (showDialog) {
@@ -163,12 +164,9 @@ fun AplicarFiltros(viewModel: FacturaViewModel = viewModel()) {
             .width(250.dp)
             .padding(bottom = 16.dp),
         onClick = {
-            //si no hay facturas se muestra el Dialog
-            if (factura.isEmpty()) {
-                showDialog = true
-            } else {
-                viewModel.FiltrarFacturas()
-            }
+
+
+                  //si no hay facturas se muestra el Dialog
         },
         colors = ButtonDefaults.buttonColors(colorResource(R.color.screen_fact_color))
     ) {
@@ -223,7 +221,7 @@ fun ShowDialog(
 }
 
 @Composable
-fun EliminarFiltros(viewModel: FacturaViewModel = viewModel()) {
+fun EliminarFiltros(viewModel: FiltroViewModel) {
     Button(
         modifier = Modifier.width(250.dp),
         onClick = {
@@ -242,7 +240,7 @@ fun EliminarFiltros(viewModel: FacturaViewModel = viewModel()) {
 }
 
 @Composable
-fun SeleccionarEstado(viewModel: FacturaViewModel = viewModel()) {
+fun SeleccionarEstado(viewModel: FiltroViewModel) {
     val checkedState = viewModel.checkedState
     val label = listOf(
         stringResource(R.string.pagadas),
@@ -289,7 +287,7 @@ fun SeleccionarEstado(viewModel: FacturaViewModel = viewModel()) {
 }
 
 @Composable
-fun CalendFechaDesde(viewModel: FacturaViewModel) {
+fun CalendFechaDesde(viewModel: FiltroViewModel) {
     val selectedDate = viewModel.fechaDesde
     var showDate by remember { mutableStateOf(false) }
 
@@ -322,7 +320,7 @@ fun CalendFechaDesde(viewModel: FacturaViewModel) {
 @Composable
 fun CalendFechaHasta(
     //modifier: Modifier = Modifier,
-    viewModel: FacturaViewModel
+    viewModel: FiltroViewModel
 ) {
     val selectedDate = viewModel.fechaHasta
     var showDate by remember { mutableStateOf(false) }
@@ -377,7 +375,7 @@ fun DatePickerModal(onDateSelected: (Long?) -> Unit, onDismiss: () -> Unit) {
 @Composable
 fun SeleccionarImporte(
     importeMax: Float,
-    viewModel: FacturaViewModel = viewModel()
+    viewModel: FiltroViewModel
 ) {
 
     val sliderPosition = viewModel.sliderPosition
