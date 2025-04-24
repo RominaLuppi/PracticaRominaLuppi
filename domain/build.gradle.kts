@@ -24,6 +24,8 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)  // Agrega la dependencia de Kotlinx Serialization
     implementation(libs.retrofit2.kotlinx.serialization.converter.v080)  // Convertidor de Kotlinx para Retrofit
     implementation(libs.okhttp)
+//    implementation(project(":data"))
+
 
 
 }

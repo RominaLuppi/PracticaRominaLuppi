@@ -41,6 +41,7 @@ appcompat = "1.7.0"
 material = "1.12.0"
 jetbrainsKotlinJvm = "2.1.0"
 runtimeLivedata = "1.7.8"
+squareupRetrofit = "2.9.0"
 ui = "1.7.8"
 uiGraphics = "<version>"
 uiTooling = "<version>"
@@ -103,6 +104,7 @@ retrofit2-kotlinx-serialization-converter = { module = "com.jakewharton.retrofit
 retrofit2-kotlinx-serialization-converter-v080 = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofit2KotlinxSerializationConverterVersion" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+retrofit2-retrofit-v290 = { module = "com.squareup.retrofit2:retrofit", version.ref = "squareupRetrofit" }
 ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
 ui-graphics = { module = "androidx.compose.ui:ui-graphics", version.ref = "uiGraphics" }
 ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "uiTooling" }

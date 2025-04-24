@@ -3,6 +3,7 @@ package com.example.core
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -57,6 +59,8 @@ fun FacturaScreen(
 ) {
 
     var showDialog by remember { mutableStateOf(false) } //visibilidad del popup
+    val facturas by viewModel.factura.observeAsState(emptyList())
+    val isLoading by viewModel.isLoading.observeAsState(false)
 
     Scaffold(
         topBar = {
@@ -70,14 +74,14 @@ fun FacturaScreen(
                             text = stringResource(R.string.title_topBar),
                             color = colorResource(R.color.screen_fact_color),
                             fontSize = 18.sp,
-                            modifier = Modifier.clickable{navController.popBackStack()}
+                            modifier = Modifier.clickable { navController.popBackStack() }
                         )
                     }
                 },
                 navigationIcon = {
                     IconButton(onClick = {
                         navController.navigate("HomeScreen")
-                    }){
+                    }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "back",
@@ -115,11 +119,13 @@ fun FacturaScreen(
             )
 
             FacturasList(
-                viewModel = viewModel,
+//                list = viewModel.factura.value ?: emptyList(),
+                list = facturas,
                 modifier = Modifier.padding(top = 16.dp, start = 16.dp),
                 onClick = {
                     showDialog = true
-                }
+                },
+                isLoading = isLoading
             )
         }
     }
@@ -136,64 +142,73 @@ fun FacturaScreen(
 fun FacturasList(
     onClick: () -> Unit,
     modifier: Modifier,
-    viewModel: FacturaViewModel
-    ) {
-    //val state =
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 16.dp, start = 8.dp)
+    list: List<Factura>,
+    isLoading: Boolean
+) {
 
-    ) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        if (isLoading) {
+            CircularProgressIndicator()
+        }
 
-        items(viewModel.state.facturaList) { factura ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .clickable(
-                        onClick = onClick
-                    )
+    }
+    if (!isLoading) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 16.dp, start = 8.dp)
 
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.Start,
-                    modifier = Modifier
+        ) {
 
-                        .padding(horizontal = 0.dp, vertical = 2.dp)
-                        .weight(1f) //ocupa el mayor ancho posible
-
-                )
-                {
-                    Text(text = factura.fecha, color = Color.DarkGray)
-                    Text(text = factura.estado, color = Color.Red)
-                }
+            items(list) { factura ->
                 Row(
                     modifier = Modifier
-                        .wrapContentWidth()
-                        .align(Alignment.CenterVertically)
-                )
-                {
-                    Text(
-                        text = factura.importe.toString() + "€",
-                        color = Color.DarkGray
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .clickable(
+                            onClick = onClick
+                        )
+
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.Start,
+                        modifier = Modifier
+
+                            .padding(horizontal = 0.dp, vertical = 2.dp)
+                            .weight(1f) //ocupa el mayor ancho posible
+
                     )
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                        contentDescription = "Abrir Factura",
-                        tint = Color.DarkGray,
+                    {
+                        Text(text = factura.fecha, color = Color.DarkGray)
+                        Text(text = factura.estado, color = Color.Red)
+                    }
+                    Row(
+                        modifier = Modifier
+                            .wrapContentWidth()
+                            .align(Alignment.CenterVertically)
                     )
+                    {
+                        Text(
+                            text = factura.importe.toString() + "€",
+                            color = Color.DarkGray
+                        )
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            contentDescription = "Abrir Factura",
+                            tint = Color.DarkGray,
+                        )
+                    }
                 }
+                Divider(
+                    modifier = Modifier.padding(top = 2.dp, end = 16.dp),
+                    color = Color.Gray,
+                    thickness = 1.dp,
+                    startIndent = 0.dp
+                )
             }
-            Divider(
-                modifier = Modifier.padding(top = 2.dp, end = 16.dp),
-                color = Color.Gray,
-                thickness = 1.dp,
-                startIndent = 0.dp
-            )
         }
     }
-    }
+}
 
 @Composable
 fun FacturaDialog(
@@ -202,15 +217,19 @@ fun FacturaDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text(text = stringResource(id = R.string.title_dialog),
+            Text(
+                text = stringResource(id = R.string.title_dialog),
                 fontWeight = FontWeight.Bold,
                 fontSize = 24.sp,
-                color = Color.Black)
+                color = Color.Black
+            )
         },
         text = {
-            Text(text = stringResource(id = R.string.message_dialog),
+            Text(
+                text = stringResource(id = R.string.message_dialog),
                 fontSize = 20.sp,
-                color = Color.Black)
+                color = Color.Black
+            )
         },
         confirmButton = {
             TextButton(
