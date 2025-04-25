@@ -1,6 +1,7 @@
 package com.example.core.ui.view
 
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -61,8 +63,7 @@ fun FacturaScreen(
 ) {
 
     var showDialog by remember { mutableStateOf(false) } //visibilidad del popup
-    val facturas by viewModel.factura.observeAsState(emptyList())
-    val isLoading by viewModel.isLoading.observeAsState(false)
+    val isLoading = viewModel.isLoading.value ?: true
 
     Scaffold(
         topBar = {
@@ -121,16 +122,15 @@ fun FacturaScreen(
             )
 
             FacturasList(
-//              list = viewModel.factura.value ?: emptyList(),
-                list = facturas,
+                list = viewModel.factura.value ?: emptyList(),
                 modifier = Modifier.padding(top = 16.dp, start = 16.dp),
                 onClick = {
                     showDialog = true
-                },
-                isLoading = isLoading
+                }
             )
         }
     }
+
     if (showDialog) {
         FacturaDialog(
             onDismiss = {
@@ -138,24 +138,20 @@ fun FacturaScreen(
             }
         )
     }
-}
-
-@Composable
-fun FacturasList(
-    onClick: () -> Unit,
-    modifier: Modifier,
-    list: List<Factura>,
-    isLoading: Boolean
-) {
-
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         if (isLoading) {
             CircularProgressIndicator()
         }
-
     }
-    if (!isLoading) {
-        LazyColumn(
+}
+@Composable
+fun FacturasList(
+    list: List<Factura>,
+    modifier: Modifier,
+    onClick: () -> Unit,
+
+) {
+   LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(top = 16.dp, start = 8.dp)
@@ -182,7 +178,7 @@ fun FacturasList(
                     )
                     {
                         Text(text = factura.fecha, color = Color.DarkGray)
-                        Text(text = factura.estado, color = Color.Red)
+                        Text(text = factura.descEstado, color = Color.Red)
                     }
                     Row(
                         modifier = Modifier
@@ -191,7 +187,7 @@ fun FacturasList(
                     )
                     {
                         Text(
-                            text = factura.importe.toString() + "€",
+                            text = factura.importeOrdenacion.toString() + "€",
                             color = Color.DarkGray
                         )
                         Icon(
@@ -209,7 +205,7 @@ fun FacturasList(
                 )
             }
         }
-    }
+
 }
 
 @Composable

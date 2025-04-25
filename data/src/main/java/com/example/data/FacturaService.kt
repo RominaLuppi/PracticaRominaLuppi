@@ -1,5 +1,6 @@
 package com.example.data
 
+/*
 import com.example.domain.Factura
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -26,4 +27,4 @@ class FacturaService {
         }
     }
 
-}
+}*/

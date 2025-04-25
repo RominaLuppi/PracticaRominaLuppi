@@ -1,5 +1,7 @@
 package com.example.core.ui.viewModel
 
+import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,22 +11,20 @@ import kotlinx.coroutines.launch
 
 class FacturaViewModel: ViewModel() {
 
-//    var state by mutableStateOf<FacturaState>(FacturaState(mutableListOf()))
-//        private set
-    val factura = MutableLiveData<List<Factura>>()
-    val isLoading = MutableLiveData<Boolean>()
-    var getFacturasUseCase = GetFacturasUseCase()
+    private val _factura = MutableLiveData<List<Factura>>()
+    val factura: LiveData<List<Factura>> = _factura
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+    private val getFacturasUseCase = GetFacturasUseCase()
 
 
     init {
     viewModelScope.launch {
-        isLoading.postValue(true)
+        _isLoading.postValue(true)
         val result: List<Factura>? = getFacturasUseCase()
 
-        if(!result.isNullOrEmpty()){
-            factura.postValue(result)
-            isLoading.postValue(false)
-        }
+        _factura.postValue(result ?: emptyList())
+        _isLoading.postValue(false)
 
     }
     }
