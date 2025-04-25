@@ -1,4 +1,4 @@
-package com.example.core
+package com.example.core.ui.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -51,12 +50,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.example.domain.SmartDetalleTab
+import com.example.core.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -1,4 +1,4 @@
-package com.example.core
+package com.example.core.ui.view
 
 
 import androidx.compose.foundation.layout.Arrangement
@@ -27,8 +27,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.core.ui.viewModel.FiltroViewModel
+import com.example.core.R
 import java.text.SimpleDateFormat
 import java.util.*
 

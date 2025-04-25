@@ -1,4 +1,4 @@
-package com.example.core
+package com.example.core.ui.viewModel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.data.GetFacturasUseCase
 import com.example.domain.Factura
 import kotlinx.coroutines.launch
-
 
 class FacturaViewModel: ViewModel() {
 

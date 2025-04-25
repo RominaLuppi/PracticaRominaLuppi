@@ -1,17 +1,14 @@
-package com.example.core
+package com.example.core.ui.viewModel
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.domain.Factura
-import kotlinx.coroutines.launch
+import com.example.core.ui.view.FacturaFiltroState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+
 
 class FiltroViewModel: ViewModel() {
 
-//    var facturaState by mutableStateOf(FacturaState())
-//        private set
 
     var fechaDesde by mutableStateOf<Long?>(null)
         private set
@@ -23,7 +20,7 @@ class FiltroViewModel: ViewModel() {
     var sliderPosition by mutableStateOf(0f)
         private set
 
-    var checkedState by mutableStateOf(List(5){false})
+    var checkedState by mutableStateOf(List(5) { false })
         private set
 
     val filtro = FacturaFiltroState(

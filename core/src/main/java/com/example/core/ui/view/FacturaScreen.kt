@@ -1,4 +1,4 @@
-package com.example.core
+package com.example.core.ui.view
 
 
 import androidx.compose.foundation.clickable
@@ -44,6 +44,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.core.ui.viewModel.FacturaViewModel
+import com.example.core.R
 import com.example.domain.Factura
 
 
@@ -119,7 +121,7 @@ fun FacturaScreen(
             )
 
             FacturasList(
-//                list = viewModel.factura.value ?: emptyList(),
+//              list = viewModel.factura.value ?: emptyList(),
                 list = facturas,
                 modifier = Modifier.padding(top = 16.dp, start = 16.dp),
                 onClick = {

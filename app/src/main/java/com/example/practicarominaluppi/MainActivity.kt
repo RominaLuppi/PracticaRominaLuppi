@@ -14,12 +14,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.core.FacturaScreen
-import com.example.core.FacturaViewModel
-import com.example.core.FiltroViewModel
-import com.example.core.FiltrosScreen
-import com.example.core.HomeScreen
-import com.example.core.SmartSolarScreen
+import com.example.core.ui.view.FacturaScreen
+import com.example.core.ui.viewModel.FacturaViewModel
+import com.example.core.ui.viewModel.FiltroViewModel
+import com.example.core.ui.view.FiltrosScreen
+import com.example.core.ui.view.HomeScreen
+import com.example.core.ui.view.SmartSolarScreen
 import com.example.practicarominaluppi.ui.theme.PracticaRominaLuppiTheme
 
 
