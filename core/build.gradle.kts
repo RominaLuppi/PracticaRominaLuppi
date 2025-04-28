@@ -2,6 +2,10 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    // Habilita el procesador de anotaciones en Kotlin
+    id("com.google.devtools.ksp")
+    id ("kotlin-android")
+    id ("kotlin-kapt") // Necesario para la anotación @Inject
 }
 
 android {
@@ -67,9 +71,11 @@ dependencies {
    // implementation(libs.androidx.lifecycle.livedata.compose.v100alpha01)
     implementation(libs.accompanist.pager)
     implementation(libs.androidx.material3.v110)
-    // Hilt
-//    implementation (libs.hilt.android)
-//    implementation (libs.hilt.compiler)
+    //hilt
+    implementation (libs.hilt.android)
+    kapt (libs.hilt.android.compiler)
+    implementation (libs.hilt.navigation.compose)
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

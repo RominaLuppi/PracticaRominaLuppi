@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     // Habilita el procesador de anotaciones en Kotlin
     id("com.google.devtools.ksp")
+    id ("kotlin-android")
+    id ("kotlin-kapt") // Necesario para la anotación @Inject
 }
 
 android {
@@ -56,9 +58,10 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)  // Agrega la dependencia de Kotlinx Serialization
     implementation(libs.retrofit2.kotlinx.serialization.converter.v080)  // Convertidor de Kotlinx para Retrofit
     implementation(libs.okhttp)
-    // Hilt
-//    implementation (libs.hilt.android)
-//    implementation (libs.hilt.compiler)
+    //hilt
+    implementation (libs.hilt.android)
+    kapt (libs.hilt.android.compiler)
+    implementation (libs.hilt.navigation.compose)
     implementation(project(":domain"))
 
     androidTestImplementation(libs.androidx.junit)

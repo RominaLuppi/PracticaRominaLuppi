@@ -1,20 +1,20 @@
 package com.example.data
 
 import com.example.domain.Factura
+import javax.inject.Inject
 
 //para que me devuelva las facturas
-class FacturaRepository {
+class FacturaRepository @Inject constructor(private val api: FacturasApiClient,
+    private val facturaProvider: FacturaProvider) {
 
-//    private val api = FacturaService()
-private val api = RetrofitHelper.getRetrofit().create(FacturasApiClient::class.java)
+
+//private val api = RetrofitHelper.getRetrofit().create(FacturasApiClient::class.java)
 
     suspend fun getAllFacturas(): List<Factura>{
-//        val response = api.getFacturas()
-//        val response: List<Factura> = api.getFacturas()
+
         val response: FacturaResponse = api.getAllFacturas()
-        FacturaProvider.facturas = response.facturas
+        facturaProvider.facturas = response.facturas
         return response.facturas
-//        FacturaProvider.facturas = response
-//        return response
+
     }
 }

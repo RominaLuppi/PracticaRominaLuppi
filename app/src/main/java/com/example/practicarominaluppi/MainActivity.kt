@@ -21,8 +21,9 @@ import com.example.core.ui.view.FiltrosScreen
 import com.example.core.ui.view.HomeScreen
 import com.example.core.ui.view.SmartSolarScreen
 import com.example.practicarominaluppi.ui.theme.PracticaRominaLuppiTheme
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -2,11 +2,13 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias (libs.plugins.hilt.application)
     // Habilita el procesador de anotaciones en Kotlin
     id("com.google.devtools.ksp")
     id ("kotlin-android")
     id ("kotlin-kapt") // Necesario para la anotación @Inject
-//    id ("dagger.hilt.android.plugin") // Hilt
+
+
 }
 
 android {
@@ -70,7 +72,6 @@ dependencies {
     implementation(libs.ui.tooling)
     implementation(libs.androidx.foundation)
 
-
     implementation (libs.kotlin.stdlib)
 
     implementation(project(":data"))
@@ -94,10 +95,10 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     // Procesador de anotaciones para Room
     ksp(libs.androidx.room.compiler)
-    // Hilt
-//    implementation (libs.hilt.android)
-//    implementation (libs.hilt.compiler)
-//    implementation(libs.androidx.hilt.navigation.compose)
+    //hilt
+    implementation (libs.hilt.android)
+    kapt (libs.hilt.android.compiler)
+    implementation (libs.hilt.navigation.compose)
 
 
     testImplementation(libs.junit)
