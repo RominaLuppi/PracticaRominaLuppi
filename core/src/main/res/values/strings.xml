@@ -64,6 +64,15 @@
     <string name="title_dialog_filtro">Información</string>
     <string name="text_dialog_filtro">No se ha encontrado ninguna factura.</string>
 
+    <string-array name="estados_factura">
+        <item>pagada</item>
+        <item>pendiente</item>
+        <item>anulada</item>
+        <item>revisada</item>
+        <item>vencida</item>
+    </string-array>
+
+
 
 
 </resources>

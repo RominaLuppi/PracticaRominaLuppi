@@ -1,10 +1,15 @@
 package com.example.core.ui.viewModel
 
+
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.core.ui.view.FacturaFiltroState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
+import com.example.core.R
+import com.example.core.ui.view.FacturaFiltroState
+import java.text.SimpleDateFormat
+import java.util.Date
 
 
 class FiltroViewModel: ViewModel() {
@@ -16,22 +21,11 @@ class FiltroViewModel: ViewModel() {
     var fechaHasta by mutableStateOf<Long?>(null)
         private set
 
-
     var sliderPosition by mutableStateOf(0f)
         private set
 
     var checkedState by mutableStateOf(List(5) { false })
         private set
-
-    val filtro = FacturaFiltroState(
-        fechaDesde = "01/01/1990",
-        fechaHasta = "23/04/2025",
-        importeMin = 0.0,
-        importeMax = 300.0,
-        estado = listOf("pagada", "pendiente"),
-        succes = true
-    )
-
 
     fun ActualizarFechaDesde(date: Long?){
         fechaDesde = date
@@ -61,8 +55,25 @@ class FiltroViewModel: ViewModel() {
         checkedState = List(5) {false}
     }
 
-//    fun FiltrarFacturas(facturafiltrada: FacturaFiltroState) {
-//
-//
-//    }
+    fun ConstruirFiltroState(): FacturaFiltroState {
+        val formatoFecha = SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault())
+        val fechaDesdeState = fechaDesde?.let { formatoFecha.format(Date(it)) } ?: ""
+        val fechaHastaState = fechaHasta?.let { formatoFecha.format(Date(it)) } ?: ""
+
+        val estadosDisponibles = listOf("pagadas", "anuladas", "cuota fija", "pendientes de pago", "plan de pago")
+        val estadosSeleccionados = estadosDisponibles.filterIndexed { index, _ -> checkedState[index] }
+
+        return FacturaFiltroState(
+            fechaDesde = fechaDesdeState,
+            fechaHasta = fechaHastaState,
+            importeMin = 0.0,
+            importeMax = sliderPosition.toDouble(),
+            estado = estadosSeleccionados,
+            succes = true
+        )
+
+
+    }
+
+
 }

@@ -320,7 +320,6 @@ fun CalendFechaDesde(viewModel: FiltroViewModel) {
 
 @Composable
 fun CalendFechaHasta(
-    //modifier: Modifier = Modifier,
     viewModel: FiltroViewModel
 ) {
     val selectedDate = viewModel.fechaHasta
