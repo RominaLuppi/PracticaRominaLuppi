@@ -2,7 +2,7 @@ package com.example.data.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.data.entities.FacturaEntity
+import com.example.data.model.FacturaEntity
 
 @Database(entities = [FacturaEntity::class], version = 1)
 

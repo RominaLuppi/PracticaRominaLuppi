@@ -91,10 +91,11 @@ dependencies {
 
     //Room
     implementation(libs.androidx.room.runtime)
-    //ViewModel
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
     // Procesador de anotaciones para Room
     ksp(libs.androidx.room.compiler)
+    //ViewModel
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+
     //hilt
     implementation (libs.hilt.android)
     kapt (libs.hilt.android.compiler)

@@ -5,9 +5,7 @@ buildscript {
         set("retrofit2_version", "2.11.0")
 
     }
-   /* dependencies {
-        classpath (libs.hilt.android.gradle.plugin)
-    }*/
+
 }
 
 plugins {

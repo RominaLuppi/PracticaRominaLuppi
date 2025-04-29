@@ -45,9 +45,11 @@ dependencies {
     //Room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
     // Procesador de anotaciones para Room
     ksp(libs.androidx.room.compiler)
+
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+
     // Retrofit
     implementation(libs.retrofit)
     // Retrofit with Scalar Converter
@@ -58,10 +60,13 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)  // Agrega la dependencia de Kotlinx Serialization
     implementation(libs.retrofit2.kotlinx.serialization.converter.v080)  // Convertidor de Kotlinx para Retrofit
     implementation(libs.okhttp)
+
+
     //hilt
     implementation (libs.hilt.android)
     kapt (libs.hilt.android.compiler)
     implementation (libs.hilt.navigation.compose)
+
     implementation(project(":domain"))
 
     androidTestImplementation(libs.androidx.junit)
