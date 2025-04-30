@@ -5,6 +5,6 @@ data class FacturaFiltroState(
     val fechaHasta: String,
     val importeMin: Double,
     val importeMax: Double,
-    val estado: List<String>,
-    val succes: Boolean
+    val estado: List<String>
+
 )

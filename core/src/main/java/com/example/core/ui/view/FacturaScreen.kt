@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,6 +28,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -42,25 +42,28 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.example.core.R
 import com.example.core.ui.viewModel.FacturaViewModel
+import com.example.core.ui.viewModel.SharedViewModel
 import com.example.domain.Factura
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FacturaScreen(
-    viewModel: FacturaViewModel,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
-    navController: NavController,
+    facturaViewModel: FacturaViewModel = viewModel(),
+    sharedViewModel: SharedViewModel = viewModel(),
+    navController: NavHostController,
     onFilterClick: () -> Unit //para hacer clickeable el icono del filtro
 
 ) {
 
     var showDialog by remember { mutableStateOf(false) } //visibilidad del popup
-    val isLoading = viewModel.isLoading.value ?: true
+    val isLoading = facturaViewModel.isLoading.value ?: true
+
+    val facturasFiltradas by sharedViewModel.facturasFiltradas.observeAsState(emptyList())
 
     Scaffold(
         topBar = {
@@ -119,7 +122,12 @@ fun FacturaScreen(
             )
 
             FacturasList(
-                list = viewModel.factura.value ?: emptyList(),
+//                list = facturaViewModel.factura.value ?: emptyList(),
+                list = if(facturasFiltradas.isNotEmpty()){
+                    facturasFiltradas
+                }else{
+                    facturaViewModel.factura.value ?: emptyList()
+                },
                 modifier = Modifier.padding(top = 16.dp, start = 16.dp),
                 onClick = {
                     showDialog = true
@@ -127,7 +135,7 @@ fun FacturaScreen(
             )
         }
     }
-
+    //mostrar el dialogo cuando se hace click en una factura
     if (showDialog) {
         FacturaDialog(
             onDismiss = {
@@ -237,7 +245,6 @@ fun FacturaDialog(
                 Text(text = stringResource(R.string.button_dialog))
             }
         }
-
     )
 
 }

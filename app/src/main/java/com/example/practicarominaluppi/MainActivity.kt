@@ -58,15 +58,16 @@ fun MainNavigation() {
             }
             composable("FacturaScreen") {
                 FacturaScreen(
-                    viewModel = facturaViewModel,
-                    onFilterClick = { navController.navigate("FiltroScreen")},
+                    facturaViewModel = facturaViewModel,
+                    onFilterClick = { navController.navigate("FiltroScreen") },
                     navController = navController
                 )
             }
             composable("FiltroScreen") {
                 FiltrosScreen(
-                   viewModel = filtroViewModel,
-                   navController = navController
+                    filtroViewModel = filtroViewModel,
+                    facturaViewModel = facturaViewModel,
+                    navController = navController
                 )
             }
             composable("SmartSolarScreen") { backStackEntry ->

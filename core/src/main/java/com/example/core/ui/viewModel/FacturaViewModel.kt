@@ -1,5 +1,6 @@
 package com.example.core.ui.viewModel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -43,47 +44,47 @@ class FacturaViewModel @Inject constructor(
             }
         }
     }
+    fun filtrarFacturas(facturasOrig: List<Factura>, filtro: FacturaFiltroState): List<Factura>{
 
-    fun filtrarFacturas(filtro: FacturaFiltroState) {
         val formatoFecha = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
-        val fechaDesde = filtro.fechaDesde.takeIf { it.isNotBlank() }?.let {
-            formatoFecha.parse(it)?.time
-        }
-        val fechaHasta = filtro.fechaHasta.takeIf { it.isNotBlank() }?.let {
-            formatoFecha.parse(it)?.time
-        }
-        val listaFiltrada = facturaOriginal.filter { factura ->
-            val fechaFactura = try {
-                formatoFecha.parse(factura.fecha)?.time
-            } catch (e: Exception) {
-                null
+        return facturasOrig.filter { factura ->
+            var esValido = true
+
+            //filtro por fecha desde
+            if (filtro.fechaDesde.isNotEmpty()) {
+                val fechaDesde = formatoFecha.parse(filtro.fechaDesde)
+                val fechaFactura = formatoFecha.parse(factura.fecha)
+                if(fechaFactura?.before(fechaDesde) == true){
+                        esValido = false
+                    }
+                }
+
+            //filtro por fecha hasta
+            if (filtro.fechaHasta.isNotEmpty()){
+                val fechaHasta = formatoFecha.parse(filtro.fechaHasta)
+                val fechaFactura = formatoFecha.parse(factura.fecha)
+                if(fechaFactura?.after(fechaHasta) == true){
+                    esValido = false
+                }
             }
-            val fechaValida = when {
-                fechaDesde != null && fechaHasta != null -> {
-                    fechaFactura != null && fechaFactura in fechaDesde..fechaHasta
-                }
-
-                fechaDesde != null -> {
-                    fechaFactura != null && fechaFactura >= fechaDesde
-                }
-
-                fechaHasta != null -> {
-                    fechaFactura != null && fechaFactura <= fechaHasta
-                }
-
-                else -> true
+            //filtro por importe minimo
+            if(filtro.importeMin > 0 && factura.importeOrdenacion < filtro.importeMin){
+                esValido = false
             }
+            //filtro por importe maximo
+            if(filtro.importeMax > 0 && factura.importeOrdenacion > filtro.importeMax){
+                esValido = false
+            }
+            //filtro por estado
+            if(filtro.estado.isNotEmpty() && !filtro.estado.contains(factura.descEstado)){
+                esValido = false
+            }
+            esValido
 
-            val importeValido = factura.importeOrdenacion in filtro.importeMin..filtro.importeMax
-            val estadoValido =
-                filtro.estado.isEmpty() || filtro.estado.contains(factura.descEstado.lowercase())
-
-
-            fechaValida && importeValido && estadoValido
         }
-
-        _factura.postValue(listaFiltrada)
     }
+
+
 
 }
