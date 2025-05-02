@@ -9,7 +9,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.core.R
-import com.example.core.ui.view.FacturaFiltroState
+import com.example.domain.FacturaFiltroState
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -45,18 +45,15 @@ class FiltroViewModel: ViewModel() {
         checkedState = checkedState.toMutableList().apply { this[index] = value }
 
     }
-    fun ResetearFechas(){
+
+    fun ResetarFiltros(){
         fechaDesde = null
         fechaHasta = null
-    }
-
-    fun ResetearSlider(){
         sliderPosition = 0f
-    }
-
-    fun ResetearCheckBox(){
         checkedState = List(5) {false}
     }
+
+
     private val _filtro = MutableLiveData<FacturaFiltroState>()
     val filtro : LiveData<FacturaFiltroState> = _filtro
 

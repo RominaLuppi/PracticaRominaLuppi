@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.core.ui.view.FacturaFiltroState
+import com.example.domain.FacturaFiltroState
 import com.example.domain.GetFacturasUseCase
 import com.example.domain.Factura
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -84,7 +84,13 @@ class FacturaViewModel @Inject constructor(
 
         }
     }
-
-
+    //para actualizar la lista de facturas en el FacturasViewModel
+    fun actualizarFacturas(facturas: List<Factura>) {
+        _factura.value = facturas
+    }
+    //para restablecer las facturas a su estado original sin filtros
+    fun resetFacturas() {
+        _factura.value = facturaOriginal
+    }
 
 }

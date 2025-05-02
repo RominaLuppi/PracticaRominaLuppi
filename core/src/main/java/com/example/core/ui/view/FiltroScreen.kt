@@ -1,7 +1,5 @@
 package com.example.core.ui.view
 
-
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +26,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.core.ui.viewModel.FiltroViewModel
@@ -39,16 +39,18 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FiltrosScreen(
-    filtroViewModel: FiltroViewModel = viewModel(),
-    facturaViewModel: FacturaViewModel = viewModel(),
-    sharedViewModel: SharedViewModel = viewModel(),
+    filtroViewModel: FiltroViewModel,
+    facturaViewModel: FacturaViewModel,
+    sharedViewModel: SharedViewModel,
     modifier: Modifier = Modifier,
     navController: NavHostController
 ) {
+    LaunchedEffect(Unit) {
+        filtroViewModel.ResetarFiltros()
+    }
 
     Scaffold(
         topBar = {
@@ -79,15 +81,15 @@ fun FiltrosScreen(
                 .fillMaxSize()
         )
         {
-            Spacer(modifier.height(4.dp))
+
             Text(
                 text = stringResource(R.string.subtitle_filtros),
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(start = 16.dp, top = 4.dp),
                 color = Color.Black,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.height(4.dp))
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -116,7 +118,7 @@ fun FiltrosScreen(
                 }
             }
             Divider(
-                modifier = Modifier.padding(start = 16.dp, top = 20.dp, end = 16.dp),
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
                 color = Color.LightGray,
                 thickness = 1.dp,
                 startIndent = 0.dp
@@ -126,7 +128,7 @@ fun FiltrosScreen(
 
             Text(
                 text = stringResource(R.string.text_por_importe),
-                modifier = Modifier.padding(top = 26.dp, start = 16.dp, bottom = 6.dp),
+                modifier = Modifier.padding(top = 26.dp, start = 16.dp, bottom = 4.dp),
                 color = Color.Black,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
@@ -141,15 +143,16 @@ fun FiltrosScreen(
                 startIndent = 0.dp
             )
             SeleccionarEstado(filtroViewModel)
-
+                Spacer(modifier = Modifier.height(10.dp))
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp),
+                    .padding(top = 12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 AplicarFiltros(filtroViewModel, facturaViewModel, sharedViewModel, navController)
                 EliminarFiltros(filtroViewModel)
+
             }
 
         }
@@ -176,18 +179,24 @@ fun AplicarFiltros(
     Button(
         modifier = Modifier
             .width(250.dp)
-            .padding(bottom = 16.dp),
+            .padding(bottom = 14.dp),
         onClick = {
-            //se filtran los datos llamando a la funcion del filtroViewModel
+            //se construye el filtro
             val filtroActual = filtroViewModel.ConstruirFiltroState()
-            val facturasFiltradas = facturaViewModel.filtrarFacturas(facturasOrig!!, filtroActual)
 
+            //se actualiza el filtro en el viewModel
+            filtroViewModel.actualizarFiltro(filtroActual)
+
+            //se filtran las facturas
+            val facturasFiltradas = facturaViewModel.filtrarFacturas(facturasOrig ?: emptyList(), filtroActual)
 
             //si no hay facturas por mostrar se muestra el Dialog
-            if(facturaViewModel.factura.value.isNullOrEmpty()){
+            if(facturasFiltradas.isEmpty()){
                 showDialog = true
             }else{
-                sharedViewModel.setFacturasFiltradas(facturasFiltradas)
+                //se actualiza la lista de facturas
+                facturaViewModel.actualizarFacturas(facturasFiltradas)
+
                 navController.navigate("FacturaScreen"){
 
                 }
@@ -248,9 +257,8 @@ fun EliminarFiltros(viewModel: FiltroViewModel) {
     Button(
         modifier = Modifier.width(250.dp),
         onClick = {
-            viewModel.ResetearFechas()
-            viewModel.ResetearSlider()
-            viewModel.ResetearCheckBox()
+            viewModel.ResetarFiltros()
+
         },
         colors = ButtonDefaults.buttonColors(Color.Gray)
     ) {
@@ -275,12 +283,13 @@ fun SeleccionarEstado(viewModel: FiltroViewModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 12.dp, end = 16.dp, start = 16.dp)
+            .padding(top = 12.dp, end = 16.dp, start = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(0.1.dp)
     ) {
 
         Text(
             text = stringResource(R.string.text_por_estado),
-            modifier = Modifier.padding(top = 8.dp, start = 16.dp, bottom = 8.dp),
+            modifier = Modifier.padding(top = 6.dp, start = 16.dp, bottom = 6.dp),
             color = Color.Black,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold
@@ -289,7 +298,6 @@ fun SeleccionarEstado(viewModel: FiltroViewModel) {
         checkedState.forEachIndexed { index, isChecked ->  //se maneja el estado de los checkbox de manera independiente
 
             Row(
-                modifier = Modifier,
                 verticalAlignment = Alignment.Top,
                 horizontalArrangement = Arrangement.Start
             )
@@ -401,7 +409,7 @@ fun SeleccionarImporte(
 ) {
 
     val sliderPosition = viewModel.sliderPosition
-    Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp))
+    Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp))
     {
 
         Text(
@@ -416,12 +424,12 @@ fun SeleccionarImporte(
         ) {
             Text(
                 text = stringResource(R.string.min_slider),
-                modifier = Modifier.padding(bottom = 4.dp, start = 8.dp),
+                modifier = Modifier.padding(start = 8.dp),
                 color = Color.LightGray,
             )
             Text(
                 text = stringResource(R.string.max_slider),
-                modifier = Modifier.padding(bottom = 4.dp, start = 8.dp),
+                modifier = Modifier.padding(start = 8.dp),
                 color = Color.LightGray,
             )
         }

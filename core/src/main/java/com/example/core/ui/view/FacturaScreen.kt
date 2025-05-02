@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -42,6 +43,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.core.R
@@ -53,12 +55,16 @@ import com.example.domain.Factura
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FacturaScreen(
-    facturaViewModel: FacturaViewModel = viewModel(),
-    sharedViewModel: SharedViewModel = viewModel(),
+    facturaViewModel: FacturaViewModel,
+    sharedViewModel: SharedViewModel,
     navController: NavHostController,
     onFilterClick: () -> Unit //para hacer clickeable el icono del filtro
 
 ) {
+    //para al volver a cargar la pantalla se muestren todas las facturas
+    LaunchedEffect(Unit) {
+        facturaViewModel.resetFacturas()
+    }
 
     var showDialog by remember { mutableStateOf(false) } //visibilidad del popup
     val isLoading = facturaViewModel.isLoading.value ?: true

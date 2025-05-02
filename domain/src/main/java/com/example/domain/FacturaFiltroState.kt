@@ -1,4 +1,4 @@
-package com.example.core.ui.view
+package com.example.domain
 
 data class FacturaFiltroState(
     val fechaDesde: String,
