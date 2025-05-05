@@ -4,6 +4,7 @@
     <string name="title_topBar">Consumo</string>
     <string name="filter_description">Filtrar</string>
     <string name="title_factura">Facturas</string>
+    <string name="abrir_factura">Abrir Factura</string>
 
     <string name="title_dialog">Información</string>
     <string name="message_dialog">Esta funcionalidad aún no está disponible</string>
@@ -26,7 +27,7 @@
     <string name="pagadas">Pagadas</string>
     <string name="anuladas">Anuladas</string>
     <string name="cuota_fija">Cuota Fija</string>
-    <string name="pendientes">Pendientes de pago</string>
+    <string name="pendientes">Pendiente de pago</string>
     <string name="plan_pago">Plan de pago</string>
 
     <string name="btn_aplicar">Aplicar</string>
@@ -71,6 +72,8 @@
         <item>revisada</item>
         <item>vencida</item>
     </string-array>
+
+
 
 
 

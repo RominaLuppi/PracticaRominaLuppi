@@ -1,5 +1,6 @@
 package com.example.core.ui.view
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,21 +21,19 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.core.ui.viewModel.FiltroViewModel
 import com.example.core.R
 import com.example.core.ui.viewModel.FacturaViewModel
 import com.example.core.ui.viewModel.SharedViewModel
-import com.example.domain.Factura
+import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -172,6 +171,16 @@ fun AplicarFiltros(
     val facturasOrig by facturaViewModel.factura.observeAsState()
     val filtro by filtroViewModel.filtro.observeAsState()
 
+    val context = LocalContext.current
+    val errorMsg by filtroViewModel.errorMsg.collectAsState()
+
+    LaunchedEffect(errorMsg) {
+        errorMsg?.let {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            filtroViewModel.limpiarMsgError()
+        }
+    }
+
     if (showDialog) {
         ShowDialog(onDismiss = { showDialog = false })
     }
@@ -181,26 +190,37 @@ fun AplicarFiltros(
             .width(250.dp)
             .padding(bottom = 14.dp),
         onClick = {
-            //se construye el filtro
-            val filtroActual = filtroViewModel.ConstruirFiltroState()
+            //comprobar validez de las fechas
+            val fechaDesde = filtroViewModel.fechaDesde
+            val fechaHasta = filtroViewModel.fechaHasta
 
-            //se actualiza el filtro en el viewModel
-            filtroViewModel.actualizarFiltro(filtroActual)
-
-            //se filtran las facturas
-            val facturasFiltradas = facturaViewModel.filtrarFacturas(facturasOrig ?: emptyList(), filtroActual)
-
-            //si no hay facturas por mostrar se muestra el Dialog
-            if(facturasFiltradas.isEmpty()){
-                showDialog = true
-            }else{
-                //se actualiza la lista de facturas
-                facturaViewModel.actualizarFacturas(facturasFiltradas)
-
-                navController.navigate("FacturaScreen"){
-
-                }
+            if(fechaDesde != null && fechaHasta != null && fechaDesde > fechaHasta){
+                filtroViewModel.mostrarMsgError("El rango de fechas no es válido")
+                return@Button
             }
+
+                //se construye el filtro
+                val filtroActual = filtroViewModel.ConstruirFiltroState()
+
+                //se actualiza el filtro en el viewModel
+                filtroViewModel.actualizarFiltro(filtroActual)
+
+                //se filtran las facturas
+                val facturasFiltradas = facturaViewModel.filtrarFacturas(facturasOrig ?: emptyList(), filtroActual)
+
+                //si no hay facturas por mostrar se muestra el Dialog
+                if(facturasFiltradas.isEmpty()){
+                    showDialog = true
+                }else{
+                    //se actualiza la lista de facturas
+                    facturaViewModel.actualizarFacturas(facturasFiltradas)
+
+                    navController.navigate("FacturaScreen"){
+
+                    }
+
+            }
+
         },
         colors = ButtonDefaults.buttonColors(colorResource(R.color.screen_fact_color))
     ) {
@@ -322,7 +342,16 @@ fun CalendFechaDesde(viewModel: FiltroViewModel) {
     val selectedDate = viewModel.fechaDesde
     var showDate by remember { mutableStateOf(false) }
 
-    val formattedDate = selectedDate?.let {
+    val context = LocalContext.current
+    val errorMsgDesde by viewModel.errorMsgDesde.collectAsState()
+
+    LaunchedEffect(errorMsgDesde) {
+        errorMsgDesde?.let {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            viewModel.limpiarMsgErrorFechaDesde()
+        }
+    }
+    val formattedDate = selectedDate?.let { it
         val date = Date(it)
         SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(date)
     } ?: stringResource(R.string.btn_fecha)
@@ -355,6 +384,16 @@ fun CalendFechaHasta(
     val selectedDate = viewModel.fechaHasta
     var showDate by remember { mutableStateOf(false) }
 
+    val context = LocalContext.current
+    val errorMsgHasta by viewModel.errorMsgHasta.collectAsState()
+
+    LaunchedEffect(errorMsgHasta) {
+        errorMsgHasta?.let {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            viewModel.limpiarMsgErrorFechaHasta()
+        }
+    }
+
     val formattedDate = selectedDate?.let {
         val date = Date(it)
         SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(date)
@@ -379,7 +418,6 @@ fun CalendFechaHasta(
             onDismiss = { showDate = false }
         )
     }
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

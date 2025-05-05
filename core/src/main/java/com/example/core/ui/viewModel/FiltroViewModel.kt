@@ -1,6 +1,9 @@
 package com.example.core.ui.viewModel
 
 
+import android.os.Build
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.compose.runtime.getValue
@@ -10,9 +13,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.core.R
 import com.example.domain.FacturaFiltroState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import kotlin.contracts.contract
 
 
 class FiltroViewModel: ViewModel() {
@@ -30,11 +41,68 @@ class FiltroViewModel: ViewModel() {
     var checkedState by mutableStateOf(List(5) { false })
         private set
 
+    val _errorMsgDesde = MutableStateFlow<String?>(null)
+    val errorMsgDesde = _errorMsgDesde.asStateFlow()
+
+    val _errorMsgHasta = MutableStateFlow<String?>(null)
+    val errorMsgHasta = _errorMsgHasta.asStateFlow()
+
+    val _errorMsg = MutableStateFlow<String?>(null)
+    val errorMsg = _errorMsg.asStateFlow()
+
+
+    fun motrarMsgErrorFechaDesde(mensaje: String){
+        _errorMsgDesde.value = mensaje
+    }
+    fun limpiarMsgErrorFechaDesde(){
+        _errorMsgDesde.value = null
+    }
+    fun motrarMsgErrorFechaHasta(mensaje: String){
+        _errorMsgHasta.value = mensaje
+    }
+    fun limpiarMsgErrorFechaHasta(){
+        _errorMsgHasta.value = null
+    }
+    fun mostrarMsgError(mensaje: String){
+        _errorMsg.value =mensaje
+    }
+    fun limpiarMsgError(){
+        _errorMsg.value = null
+    }
+
     fun ActualizarFechaDesde(date: Long?){
-        fechaDesde = date
+        if(date == null)
+            return
+        val hoy = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }.timeInMillis
+      if(date > hoy){
+            val msg = "Debe seleccionar una fecha válida"
+            motrarMsgErrorFechaDesde(msg)
+      }else{
+          fechaDesde = date
+      }
+
     }
     fun ActualizarFechaHasta(date: Long?){
-        fechaHasta = date
+        if(date == null)
+            return
+        val hoy = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }.timeInMillis
+        if (date > hoy){
+            val msg = "Debe seleccionar una fecha válida"
+            motrarMsgErrorFechaHasta(msg)
+
+        }else{
+            fechaHasta = date
+        }
     }
 
     fun SelectorImporte(value: Float){
@@ -52,7 +120,6 @@ class FiltroViewModel: ViewModel() {
         sliderPosition = 0f
         checkedState = List(5) {false}
     }
-
 
     private val _filtro = MutableLiveData<FacturaFiltroState>()
     val filtro : LiveData<FacturaFiltroState> = _filtro

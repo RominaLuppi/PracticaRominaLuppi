@@ -61,7 +61,7 @@ fun FacturaScreen(
     onFilterClick: () -> Unit //para hacer clickeable el icono del filtro
 
 ) {
-    //para al volver a cargar la pantalla se muestren todas las facturas
+    //para al volver a cargar la pantalla y que se muestren todas las facturas
     LaunchedEffect(Unit) {
         facturaViewModel.resetFacturas()
     }
@@ -189,7 +189,10 @@ fun FacturasList(
                     )
                     {
                         Text(text = factura.fecha, color = Color.DarkGray)
-                        Text(text = factura.descEstado, color = Color.Red)
+
+                        if(factura.descEstado == stringResource(R.string.pendientes)){
+                            Text(text = factura.descEstado, color = Color.Red)
+                        }
                     }
                     Row(
                         modifier = Modifier
@@ -203,7 +206,7 @@ fun FacturasList(
                         )
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                            contentDescription = "Abrir Factura",
+                            contentDescription = stringResource(R.string.abrir_factura),
                             tint = Color.DarkGray,
                         )
                     }
