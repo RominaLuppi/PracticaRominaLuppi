@@ -6,6 +6,9 @@
     <string name="title_factura">Facturas</string>
     <string name="abrir_factura">Abrir Factura</string>
 
+    <string name="logo_iberdrola">Logo iberdrola</string>
+    <string name="btn_activar_debug">Activar modo debug</string>
+
     <string name="title_dialog">Información</string>
     <string name="message_dialog">Esta funcionalidad aún no está disponible</string>
     <string name="button_dialog">Cerrar</string>

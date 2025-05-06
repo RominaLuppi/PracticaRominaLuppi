@@ -11,6 +11,7 @@ import com.example.domain.Factura
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
 
@@ -44,6 +45,24 @@ class FacturaViewModel @Inject constructor(
             }
         }
     }
+    fun formatearFecha(fecha: String): String{
+
+            val formatoFechaActual = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val formatoFechaNueva = SimpleDateFormat("dd MMM yyyy", Locale("es", "ES"))
+            val fechaNueva: Date = formatoFechaActual.parse(fecha)
+
+            val fechaFormateada = formatoFechaNueva.format(fechaNueva)
+        val partes = fechaFormateada.split(" ")
+        if (partes.size == 3){
+            val dia = partes[0]
+            val mes = partes[1].replaceFirstChar { it.uppercase() }
+            val año = partes[2]
+            return ("$dia $mes $año")
+        }
+
+        return fechaFormateada
+    }
+
     fun filtrarFacturas(facturasOrig: List<Factura>, filtro: FacturaFiltroState): List<Factura>{
 
         val formatoFecha = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())

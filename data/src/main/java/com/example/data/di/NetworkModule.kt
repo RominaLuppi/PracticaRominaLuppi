@@ -1,5 +1,6 @@
 package com.example.data.di
 
+import co.infinum.retromock.Retromock
 import com.example.data.remote.FacturasApiClient
 import dagger.Module
 import dagger.Provides
@@ -23,10 +24,24 @@ object NetworkModule {
             .build()
 
     }
+    @Singleton
+    @Provides
+    fun provideRetromock(retrofit: Retrofit): Retromock {
+        return Retromock.Builder()
+            .retrofit(retrofit)
+            .build()
+    }
 
     @Singleton
     @Provides
-    fun provideFacturasApiclient(retrofit: Retrofit): FacturasApiClient {
+    fun provideFacturasApiClient(retrofit: Retrofit): FacturasApiClient {
         return retrofit.create(FacturasApiClient::class.java)
     }
+
+    @Singleton
+    @Provides
+    fun provideMockFacturasApiClient(retromock: Retromock): FacturasApiClient {
+        return retromock.create(FacturasApiClient::class.java)
+    }
+
 }

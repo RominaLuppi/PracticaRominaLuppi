@@ -36,6 +36,7 @@ retrofit = "2.11.0"
 retrofit2KotlinxSerializationConverter = "1.0.0"
 retrofit2KotlinxSerializationConverterVersion = "1.0.0"
 retrofitVersion = "2.11.0"
+retromock = "1.1.0"
 roomCompiler = "2.6.1"
 roomCompilerVersion = "2.7.1"
 roomKtx = "2.6.1"
@@ -114,6 +115,7 @@ retrofit2-kotlinx-serialization-converter-v080 = { module = "com.jakewharton.ret
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 retrofit2-retrofit-v290 = { module = "com.squareup.retrofit2:retrofit", version.ref = "squareupRetrofit" }
+retromock = { module = "co.infinum:retromock", version.ref = "retromock" }
 ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
 ui-graphics = { module = "androidx.compose.ui:ui-graphics", version.ref = "uiGraphics" }
 ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "uiTooling" }

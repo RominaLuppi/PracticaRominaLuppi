@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -41,6 +43,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -50,6 +54,7 @@ import com.example.core.R
 import com.example.core.ui.viewModel.FacturaViewModel
 import com.example.core.ui.viewModel.SharedViewModel
 import com.example.domain.Factura
+import java.text.SimpleDateFormat
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -128,16 +133,18 @@ fun FacturaScreen(
             )
 
             FacturasList(
-//                list = facturaViewModel.factura.value ?: emptyList(),
-                list = if(facturasFiltradas.isNotEmpty()){
+                list = if (facturasFiltradas.isNotEmpty()) {
                     facturasFiltradas
-                }else{
+                } else {
                     facturaViewModel.factura.value ?: emptyList()
                 },
+                facturaViewModel = facturaViewModel,
                 modifier = Modifier.padding(top = 16.dp, start = 16.dp),
+
                 onClick = {
                     showDialog = true
                 }
+
             )
         }
     }
@@ -155,70 +162,79 @@ fun FacturaScreen(
         }
     }
 }
+
 @Composable
 fun FacturasList(
     list: List<Factura>,
+    facturaViewModel: FacturaViewModel,
     modifier: Modifier,
     onClick: () -> Unit,
 
-) {
-   LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 16.dp, start = 8.dp)
+    ) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 16.dp, start = 8.dp)
 
-        ) {
+    ) {
 
-            items(list) { factura ->
-                Row(
+        items(list) { factura ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(68.dp)
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .clickable(onClick = onClick)
+
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.Center,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .clickable(
-                            onClick = onClick
-                        )
 
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.Start,
-                        modifier = Modifier
+                        .padding(horizontal = 0.dp, vertical = 2.dp)
+                        .weight(1f) //ocupa el mayor ancho posible
+                        .fillMaxHeight()
 
-                            .padding(horizontal = 0.dp, vertical = 2.dp)
-                            .weight(1f) //ocupa el mayor ancho posible
-
+                )
+                {
+                    val fechaFormatter = facturaViewModel.formatearFecha(factura.fecha)
+                    Text(
+                        text = fechaFormatter.toString(),
+                        color = Color.DarkGray
                     )
-                    {
-                        Text(text = factura.fecha, color = Color.DarkGray)
 
-                        if(factura.descEstado == stringResource(R.string.pendientes)){
-                            Text(text = factura.descEstado, color = Color.Red)
-                        }
-                    }
-                    Row(
-                        modifier = Modifier
-                            .wrapContentWidth()
-                            .align(Alignment.CenterVertically)
-                    )
-                    {
-                        Text(
-                            text = factura.importeOrdenacion.toString() + "€",
-                            color = Color.DarkGray
-                        )
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                            contentDescription = stringResource(R.string.abrir_factura),
-                            tint = Color.DarkGray,
-                        )
+                    if (factura.descEstado == stringResource(R.string.pendientes)) {
+                        Text(text = factura.descEstado,
+                            color = Color.Red,
+                            fontSize = 14.sp)
                     }
                 }
-                Divider(
-                    modifier = Modifier.padding(top = 2.dp, end = 16.dp),
-                    color = Color.Gray,
-                    thickness = 1.dp,
-                    startIndent = 0.dp
+                Row(
+                    modifier = Modifier
+                        .wrapContentWidth()
+                        .align(Alignment.CenterVertically)
                 )
+                {
+                    Text(
+                        text = factura.importeOrdenacion.toString() + "€",
+                        color = Color.DarkGray
+                    )
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                        contentDescription = stringResource(R.string.abrir_factura),
+                        tint = Color.DarkGray,
+                    )
+                }
             }
+            Divider(
+                modifier = Modifier.padding(top = 2.dp, end = 16.dp),
+                color = Color.Gray,
+                thickness = 1.dp,
+                startIndent = 0.dp
+            )
         }
+    }
 
 }
 
