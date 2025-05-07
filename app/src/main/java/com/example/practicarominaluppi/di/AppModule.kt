@@ -1,5 +1,7 @@
 package com.example.practicarominaluppi.di
 
+import com.example.data.RetrofitRepository
+import com.example.data.RetromockRepository
 import com.example.domain.GetFacturasFiltradasUseCase
 import com.example.domain.GetFacturasUseCase
 import com.example.domain.repository.FacturaRepository
@@ -14,12 +16,16 @@ import javax.inject.Singleton
 object AppModule{
     @Provides
     @Singleton
-    fun provideGetFacturasUseCase(repository: FacturaRepository) : GetFacturasUseCase{
+    fun provideGetFacturasUseCase(
+        @RetrofitRepository repository: FacturaRepository)
+    : GetFacturasUseCase{
         return GetFacturasUseCase(repository)
     }
     @Provides
     @Singleton
-    fun provideGetFacturasFiltradasUseCase(repository: FacturaRepository): GetFacturasFiltradasUseCase {
+    fun provideGetFacturasFiltradasUseCase(
+        @RetromockRepository repository: FacturaRepository)
+    : GetFacturasFiltradasUseCase {
         return GetFacturasFiltradasUseCase(repository)
     }
 }

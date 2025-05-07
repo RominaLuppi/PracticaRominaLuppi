@@ -98,7 +98,7 @@ fun HomeScreen(navController: NavController) {
 
                 IconButton(
                     onClick = {
-
+                        //seguir aqui
                         MockConfig.mockActive = !MockConfig.mockActive
 
 

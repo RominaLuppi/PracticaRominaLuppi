@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 class FacturaRepositoryImpl @Inject constructor(
     private val apiClient: FacturasApiClient, //retrofit
-    private val mockApiClient: FacturasApiClient, //retromock
+//    private val mockApiClient: FacturasApiClient, //retromock
     private val facturasDao: FacturasDao    //room
 
 ) : FacturaRepository {
@@ -25,7 +25,7 @@ class FacturaRepositoryImpl @Inject constructor(
             return facturasFromDb.map { it.toDomain() }
             }else {
             //si no hay facturas en la BD se obtienen de la api usando Retrofit o Retromock
-                val apiClient = if (MockConfig.mockActive) mockApiClient else apiClient
+//                val apiClient = if (MockConfig.mockActive) mockApiClient else apiClient
                 val facturaResponse = apiClient.getAllFacturas()
 
             //se convierten las facturas dto a entidades para la DB

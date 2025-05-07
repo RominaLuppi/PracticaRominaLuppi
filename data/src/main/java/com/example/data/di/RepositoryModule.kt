@@ -1,5 +1,7 @@
 package com.example.data.di
 
+import com.example.data.RetrofitRepository
+import com.example.data.RetromockRepository
 import com.example.data.database.FacturasDao
 import com.example.data.remote.FacturasApiClient
 import com.example.data.repository.FacturaRepositoryImpl
@@ -15,10 +17,28 @@ import javax.inject.Singleton
 object RepositoryModule{
     @Provides
     @Singleton
+    @RetrofitRepository
     fun provideFacturaRepository(
-        apiClient: FacturasApiClient,
-        dao: FacturasDao
+        @RetrofitRepository retrofitClient: FacturasApiClient,
+        facturasDao: FacturasDao
     ) : FacturaRepository{
-        return FacturaRepositoryImpl(apiClient, dao)
+        return FacturaRepositoryImpl(
+            apiClient = retrofitClient,
+            facturasDao = facturasDao )
+    }
+
+    @Provides
+    @Singleton
+    @RetromockRepository
+    fun provideMockFacturaRepository(
+        @RetromockRepository mockApiClient: FacturasApiClient,
+        facturasDao: FacturasDao
+    ): FacturaRepository {
+        return FacturaRepositoryImpl(
+            apiClient = mockApiClient,
+            facturasDao = facturasDao
+        )
     }
 }
+
+
