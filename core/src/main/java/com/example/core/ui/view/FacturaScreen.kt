@@ -256,7 +256,7 @@ fun FacturaDialog(
             Text(
                 text = stringResource(id = R.string.message_dialog),
                 fontSize = 20.sp,
-                color = Color.Black
+                color = Color.Black,
             )
         },
         confirmButton = {

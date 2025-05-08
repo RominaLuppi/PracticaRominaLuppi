@@ -23,6 +23,7 @@ import com.example.core.ui.view.FiltrosScreen
 import com.example.core.ui.view.HomeScreen
 import com.example.core.ui.view.SmartSolarScreen
 import com.example.core.ui.viewModel.SharedViewModel
+import com.example.core.ui.viewModel.SmartSolarViewModel
 import com.example.practicarominaluppi.ui.theme.PracticaRominaLuppiTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -81,13 +82,10 @@ fun MainNavigation() {
                 )
             }
             composable("SmartSolarScreen") { backStackEntry ->
-//                val viewModel: SmartSolarViewModel = hiltViewModel(backStackEntry)
+                val smartSolarViewModel: SmartSolarViewModel = hiltViewModel(backStackEntry)
                 SmartSolarScreen(
-                    modifier = Modifier,
-                    contentPadding = PaddingValues(),
                     navController = navController,
-                    onFilterClick = { },
-//                    viewModel = TODO,
+                    smartSolarViewModel = smartSolarViewModel
                 )
             }
         }

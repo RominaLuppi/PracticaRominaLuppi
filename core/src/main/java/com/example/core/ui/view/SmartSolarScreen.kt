@@ -6,7 +6,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,10 +30,15 @@ import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,35 +46,29 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import kotlinx.coroutines.launch
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import com.example.core.R
+import com.example.core.ui.viewModel.SmartSolarViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SmartSolarScreen(
-//  viewModel: SmartSolarViewModel,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
+    smartSolarViewModel: SmartSolarViewModel = hiltViewModel(),
     navController: NavController,
-    onFilterClick: () -> Unit
 ) {
     val tabNames = listOf("Mi instalación", "Energía", "Detalles")
     val pagerStates = rememberPagerState(initialPage = 0) {
         tabNames.size
     }
     val coroutineScope = rememberCoroutineScope()
-//    val detalle = viewModel.detalle.collectAsState().value
 
     Scaffold(
         containerColor = Color.White,
@@ -164,22 +162,13 @@ fun SmartSolarScreen(
                 when (page) {
                     0 -> TabMiInstalacionview()
                     1 -> TabEnergiaView()
-                    2 -> TabDetallesView()/*{
-                       *//* if (detalle == null) {
-                            // Muestra un loading mientras se carga
-                            Box(modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center)
-                            {
-                                CircularProgressIndicator()
-                            }
-                        } else {
-                            TabDetallesView(detalle) // Pasa los datos cargados para mostrarlos en el Tab
-                        }*//*
-                    }*/
+                    2 -> TabDetallesView(smartSolarViewModel)
+
+                    }
                 }
             }
         }
-    }
+
 
 }
 
@@ -229,43 +218,51 @@ fun InfoDialog(
 }
 
 @Composable
-fun TabDetallesView() {
+fun TabDetallesView(
+    smartSolarViewModel: SmartSolarViewModel
+) {
     var showDialog by remember { mutableStateOf(false) } //visibilidad del popup
+
+    val detalle = smartSolarViewModel.detalle
+
     Column(
         modifier = Modifier
-            .padding(16.dp)
+            .padding(8.dp)
             .fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(6.dp)
+        verticalArrangement = Arrangement.spacedBy(4.dp)
     )
     {
         Spacer(modifier = Modifier.height(12.dp))
         Text(
             text = stringResource(R.string.text_cau),
             color = Color.Gray,
-            fontSize = 12.sp
+            fontSize = 12.sp,
+            modifier = Modifier.padding(start = 16.dp)
         )
         TextField(
-            value = "",
-            onValueChange = { },
+            value = detalle.cau,
+            onValueChange = {  },
             maxLines = 1,
             modifier = Modifier
-                .fillMaxWidth()
-                .height(22.dp),
+                .padding(bottom = 8.dp)
+                .fillMaxWidth(),
+            textStyle = TextStyle(textAlign = TextAlign.Start),
             colors = textViewFieldColors()
         )
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(6.dp))
         Text(
             text = stringResource(R.string.text_estado_solicitud),
             color = Color.Gray,
-            fontSize = 12.sp
+            fontSize = 12.sp,
+            modifier = Modifier.padding(start = 16.dp)
         )
         TextField(
-            value = "",
+            value = detalle.estadoSolicitud,
             onValueChange = { },
             maxLines = 2,
             modifier = Modifier
-                .fillMaxWidth()
-                .height(22.dp),
+                .padding(bottom = 8.dp)
+                .fillMaxWidth(),
             colors = textViewFieldColors(),
 
             trailingIcon = {
@@ -279,49 +276,55 @@ fun TabDetallesView() {
                 }
             }
         )
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(6.dp))
         Text(
             text = stringResource(R.string.text_tipo),
             color = Color.Gray,
-            fontSize = 12.sp
+            fontSize = 12.sp,
+            modifier = Modifier.padding(start = 16.dp)
         )
         TextField(
-            value = "",
+            value = detalle.tipoAutoconsumo,
             onValueChange = { },
             maxLines = 2,
             modifier = Modifier
-                .fillMaxWidth()
-                .height(22.dp),
+                .padding(bottom = 8.dp)
+                .fillMaxWidth(),
+
             colors = textViewFieldColors()
         )
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(6.dp))
         Text(
             text = stringResource(R.string.text_compensacion),
             color = Color.Gray,
-            fontSize = 12.sp
+            fontSize = 12.sp,
+            modifier = Modifier.padding(start = 16.dp)
         )
         TextField(
-            value = "",
+            value = detalle.compensacion,
             onValueChange = { },
             maxLines = 1,
             modifier = Modifier
-                .fillMaxWidth()
-                .height(22.dp),
+                .padding(bottom = 8.dp)
+                .fillMaxWidth(),
+
             colors = textViewFieldColors()
         )
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(6.dp))
         Text(
             text = stringResource(R.string.text_potencia),
             color = Color.Gray,
-            fontSize = 12.sp
+            fontSize = 12.sp,
+            modifier = Modifier.padding(start = 16.dp)
         )
         TextField(
-            value = "",
+            value = detalle.potencia,
             onValueChange = { },
             maxLines = 1,
             modifier = Modifier
-                .fillMaxWidth()
-                .height(22.dp),
+                .padding(bottom = 8.dp)
+                .fillMaxWidth(),
+
             colors = textViewFieldColors()
 
         )
@@ -339,7 +342,8 @@ fun textViewFieldColors() = TextFieldDefaults.colors(
 focusedIndicatorColor = Color.Black,
 focusedContainerColor = Color.Transparent,
 unfocusedContainerColor = Color.Transparent,
-disabledContainerColor = Color.Transparent
+disabledContainerColor = Color.Transparent,
+disabledTextColor = Color.Black
 )
 @Composable
 fun TabEnergiaView() {

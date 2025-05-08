@@ -139,7 +139,8 @@ fun HomeScreen(navController: NavController) {
                 ) {
                     Text(
                         text = stringResource(R.string.btn_home_facturas),
-                        color = Color.White
+                        color = Color.White,
+                        fontSize = 16.sp
                     )
                 }
                 Spacer(modifier = Modifier.width(16.dp))
@@ -154,7 +155,8 @@ fun HomeScreen(navController: NavController) {
                 ) {
                     Text(
                         text = stringResource(R.string.btn_home_smart_solar),
-                        color = Color.White
+                        color = Color.White,
+                        fontSize = 16.sp
                     )
 
                 }
