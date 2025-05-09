@@ -1,7 +1,8 @@
 package com.example.core.ui.view
 
-import android.widget.Toast
+import androidx.annotation.RestrictTo
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,12 +23,14 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonColors
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,19 +40,24 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.core.R
+import com.example.core.ui.viewModel.FacturaViewModel
 import com.example.data.di.MockConfig
-import com.example.data.di.NetworkModule
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(navController: NavController,
+               facturaViewModel: FacturaViewModel) {
 
-    Scaffold(
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    Scaffold(modifier = Modifier.background(Color.White),
         topBar = {
             TopAppBar(
                 title = {
@@ -61,6 +69,7 @@ fun HomeScreen(navController: NavController) {
                         fontSize = 28.sp
                     )
                 },
+
                 navigationIcon = {
                     Icon(
                         imageVector = Icons.Default.Home,
@@ -68,10 +77,10 @@ fun HomeScreen(navController: NavController) {
                         tint = Color.Black,
                         modifier = Modifier.padding(16.dp)
                     )
-                },
-
-                )
-        }) { paddingScaffold ->
+                }
+            ) },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState)}
+    ) { paddingScaffold ->
 
         Column(
             modifier = Modifier
@@ -98,10 +107,12 @@ fun HomeScreen(navController: NavController) {
 
                 IconButton(
                     onClick = {
-                        //seguir aqui
                         MockConfig.mockActive = !MockConfig.mockActive
-
-
+                        facturaViewModel.cargarFacturas()
+                        //para mostrar el mensaje con snackbar
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Modo mock activado ${MockConfig.mockActive}")
+                        }
                     },
                 ) {
                     Icon(

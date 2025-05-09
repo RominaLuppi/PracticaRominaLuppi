@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -110,6 +112,7 @@ fun SmartSolarScreen(
         Column(
             modifier = Modifier
                 .padding(paddingScaffold)
+                .verticalScroll(rememberScrollState())
 
         ) {
             Text(
@@ -216,7 +219,6 @@ fun InfoDialog(
     )
 
 }
-
 @Composable
 fun TabDetallesView(
     smartSolarViewModel: SmartSolarViewModel
@@ -228,7 +230,8 @@ fun TabDetallesView(
     Column(
         modifier = Modifier
             .padding(8.dp)
-            .fillMaxSize(),
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     )
     {
@@ -247,7 +250,8 @@ fun TabDetallesView(
                 .padding(bottom = 8.dp)
                 .fillMaxWidth(),
             textStyle = TextStyle(textAlign = TextAlign.Start),
-            colors = textViewFieldColors()
+            colors = textViewFieldColors(),
+            readOnly = true
         )
         Spacer(modifier = Modifier.height(6.dp))
         Text(
@@ -264,6 +268,7 @@ fun TabDetallesView(
                 .padding(bottom = 8.dp)
                 .fillMaxWidth(),
             colors = textViewFieldColors(),
+            readOnly = true,
 
             trailingIcon = {
                 IconButton(onClick = { showDialog = true }) {
@@ -290,8 +295,8 @@ fun TabDetallesView(
             modifier = Modifier
                 .padding(bottom = 8.dp)
                 .fillMaxWidth(),
-
-            colors = textViewFieldColors()
+            colors = textViewFieldColors(),
+            readOnly = true
         )
         Spacer(modifier = Modifier.height(6.dp))
         Text(
@@ -307,8 +312,8 @@ fun TabDetallesView(
             modifier = Modifier
                 .padding(bottom = 8.dp)
                 .fillMaxWidth(),
-
-            colors = textViewFieldColors()
+            colors = textViewFieldColors(),
+            readOnly = true
         )
         Spacer(modifier = Modifier.height(6.dp))
         Text(
@@ -324,9 +329,8 @@ fun TabDetallesView(
             modifier = Modifier
                 .padding(bottom = 8.dp)
                 .fillMaxWidth(),
-
-            colors = textViewFieldColors()
-
+            colors = textViewFieldColors(),
+            readOnly = true
         )
 
     }

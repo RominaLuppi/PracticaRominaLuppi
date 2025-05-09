@@ -129,4 +129,3 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 hilt-application = { id = "com.google.dagger.hilt.android", version.ref = "hiltVersion" }
 
-

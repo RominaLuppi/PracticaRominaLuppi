@@ -63,12 +63,12 @@ dependencies {
     implementation (libs.androidx.material3.v121)
     implementation (libs.ui.tooling.preview)
     implementation (libs.androidx.foundation)
-   // implementation (libs.androidx.lifecycle.livedata.compose)
+    // implementation (libs.androidx.lifecycle.livedata.compose)
     implementation(libs.androidx.lifecycle.runtime.compose.v262)
 
     implementation (libs.androidx.runtime.livedata)
     implementation (libs.androidx.lifecycle.viewmodel.compose)
-   // implementation(libs.androidx.lifecycle.livedata.compose.v100alpha01)
+    // implementation(libs.androidx.lifecycle.livedata.compose.v100alpha01)
     implementation(libs.accompanist.pager)
     implementation(libs.androidx.material3.v110)
     //hilt

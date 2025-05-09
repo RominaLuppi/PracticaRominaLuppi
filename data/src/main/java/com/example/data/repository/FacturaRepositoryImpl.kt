@@ -1,5 +1,7 @@
 package com.example.data.repository
 
+import com.example.data.RetrofitRepository
+import com.example.data.RetromockRepository
 import com.example.data.database.FacturasDao
 import com.example.data.di.MockConfig
 import com.example.data.remote.FacturasApiClient
@@ -11,8 +13,8 @@ import com.example.domain.FacturaFiltroState
 import javax.inject.Inject
 
 class FacturaRepositoryImpl @Inject constructor(
-    private val apiClient: FacturasApiClient, //retrofit
-//    private val mockApiClient: FacturasApiClient, //retromock
+    @RetrofitRepository private val apiClient: FacturasApiClient, //retrofit
+    @RetromockRepository private val mockApiClient: FacturasApiClient, //retromock
     private val facturasDao: FacturasDao    //room
 
 ) : FacturaRepository {
@@ -23,10 +25,10 @@ class FacturaRepositoryImpl @Inject constructor(
         //si hay facturas en la BD las devuelve
         if (facturasFromDb.isNotEmpty()){
             return facturasFromDb.map { it.toDomain() }
-            }else {
+        } else {
             //si no hay facturas en la BD se obtienen de la api usando Retrofit o Retromock
-//                val apiClient = if (MockConfig.mockActive) mockApiClient else apiClient
-                val facturaResponse = apiClient.getAllFacturas()
+            val apiClient = if (MockConfig.mockActive) mockApiClient else apiClient
+            val facturaResponse = apiClient.getAllFacturas()
 
             //se convierten las facturas dto a entidades para la DB
             val facturaEntityList = facturaResponse.facturas.map { it.toEntity() }
@@ -38,6 +40,7 @@ class FacturaRepositoryImpl @Inject constructor(
             return facturaEntityList.map { it.toDomain() }
         }
     }
+
 
     //obtener las facturas filtradas
     override suspend fun getFacturasFiltradas(filtro: FacturaFiltroState): List<Factura>? {

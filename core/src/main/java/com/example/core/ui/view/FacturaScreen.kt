@@ -1,6 +1,7 @@
 package com.example.core.ui.view
 
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -76,7 +77,7 @@ fun FacturaScreen(
 
     val facturasFiltradas by sharedViewModel.facturasFiltradas.observeAsState(emptyList())
 
-    Scaffold(
+    Scaffold(modifier = Modifier.background(Color.White),
         topBar = {
             TopAppBar(
                 title = {
@@ -191,11 +192,9 @@ fun FacturasList(
                     horizontalAlignment = Alignment.Start,
                     verticalArrangement = Arrangement.Center,
                     modifier = Modifier
-
                         .padding(horizontal = 0.dp, vertical = 2.dp)
                         .weight(1f) //ocupa el mayor ancho posible
                         .fillMaxHeight()
-
                 )
                 {
                     val fechaFormatter = facturaViewModel.formatearFecha(factura.fecha)

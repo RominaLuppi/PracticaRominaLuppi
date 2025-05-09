@@ -4,7 +4,8 @@ import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class FacturasApplication : Application() {
-
-
+class FacturasApplication : Application(){
+    override fun onCreate() {
+        super.onCreate()
+    }
 }

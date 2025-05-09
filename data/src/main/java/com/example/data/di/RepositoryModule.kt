@@ -14,31 +14,21 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object RepositoryModule{
+object RepositoryModule {
     @Provides
     @Singleton
-    @RetrofitRepository
     fun provideFacturaRepository(
         @RetrofitRepository retrofitClient: FacturasApiClient,
-        facturasDao: FacturasDao
-    ) : FacturaRepository{
-        return FacturaRepositoryImpl(
-            apiClient = retrofitClient,
-            facturasDao = facturasDao )
-    }
-
-    @Provides
-    @Singleton
-    @RetromockRepository
-    fun provideMockFacturaRepository(
         @RetromockRepository mockApiClient: FacturasApiClient,
         facturasDao: FacturasDao
     ): FacturaRepository {
         return FacturaRepositoryImpl(
-            apiClient = mockApiClient,
+            apiClient = retrofitClient,
+            mockApiClient = mockApiClient,
             facturasDao = facturasDao
         )
     }
 }
+
 
 

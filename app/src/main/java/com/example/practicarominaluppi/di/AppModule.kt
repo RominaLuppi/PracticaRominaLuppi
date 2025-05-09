@@ -28,4 +28,5 @@ object AppModule{
     : GetFacturasFiltradasUseCase {
         return GetFacturasFiltradasUseCase(repository)
     }
+
 }

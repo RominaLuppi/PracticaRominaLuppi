@@ -57,7 +57,7 @@ fun MainNavigation() {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("HomeScreen") {
-                HomeScreen(navController)
+                HomeScreen(navController, facturaViewModel)
 
             }
             composable("FacturaScreen") { backStackEntry ->

@@ -11,13 +11,36 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Checkbox
 import androidx.compose.material.Divider
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,13 +52,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.core.ui.viewModel.FiltroViewModel
 import com.example.core.R
 import com.example.core.ui.viewModel.FacturaViewModel
+import com.example.core.ui.viewModel.FiltroViewModel
 import com.example.core.ui.viewModel.SharedViewModel
-import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -78,6 +101,7 @@ fun FiltrosScreen(
             modifier = Modifier
                 .padding(paddingScaffold)
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
         )
         {
 
@@ -133,7 +157,7 @@ fun FiltrosScreen(
                 fontWeight = FontWeight.Bold
             )
 
-            SeleccionarImporte(importeMax = 300.0f, filtroViewModel)
+            SeleccionarImporte( filtroViewModel, facturaViewModel)
 
             Divider(
                 modifier = Modifier.padding(start = 16.dp, top = 30.dp, end = 16.dp),
@@ -149,21 +173,20 @@ fun FiltrosScreen(
                     .padding(top = 12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                AplicarFiltros(filtroViewModel, facturaViewModel, sharedViewModel, navController)
+                AplicarFiltros(filtroViewModel, facturaViewModel, navController)
                 EliminarFiltros(filtroViewModel)
 
             }
 
         }
     }
-
 }
 
 @Composable
 fun AplicarFiltros(
     filtroViewModel: FiltroViewModel,
     facturaViewModel: FacturaViewModel,
-    sharedViewModel: SharedViewModel,
+//    sharedViewModel: SharedViewModel,
     navController: NavHostController
 ) {
 
@@ -194,7 +217,8 @@ fun AplicarFiltros(
             val fechaDesde = filtroViewModel.fechaDesde
             val fechaHasta = filtroViewModel.fechaHasta
 
-            if(fechaDesde != null && fechaHasta != null && fechaDesde > fechaHasta){
+            if(fechaDesde != null && fechaHasta != null && fechaDesde > fechaHasta)
+            {
                 filtroViewModel.mostrarMsgError("El rango de fechas no es válido")
                 return@Button
             }
@@ -215,9 +239,7 @@ fun AplicarFiltros(
                     //se actualiza la lista de facturas
                     facturaViewModel.actualizarFacturas(facturasFiltradas)
 
-                    navController.navigate("FacturaScreen"){
-
-                    }
+                    navController.popBackStack()
 
             }
 
@@ -326,7 +348,9 @@ fun SeleccionarEstado(viewModel: FiltroViewModel) {
                     checked = isChecked,
                     onCheckedChange = {
                         viewModel.SelectorEstado(index, it)
-                    }
+                    },
+//                    colors = CheckboxDefaults.colors(
+//                        checkMarkColor = colorResource(R.color.screen_fact_color))
                 )
                 Text(
                     text = label[index],
@@ -430,11 +454,25 @@ fun DatePickerModal(onDateSelected: (Long?) -> Unit, onDismiss: () -> Unit) {
             TextButton(onClick = {
                 onDateSelected(datePickerState.selectedDateMillis)
                 onDismiss()
-            }) { Text(stringResource(R.string.aceptar)) }
+            }
+
+            ) { Text(stringResource(R.string.aceptar),
+                color = colorResource(R.color.screen_fact_color)) }
+
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancelar)) }
-        }
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancelar),
+                color = colorResource(R.color.screen_fact_color)) }
+        },
+        colors = DatePickerDefaults.colors(
+            containerColor = Color.White,
+            dayContentColor = Color.White,
+            disabledDayContentColor = Color.White,
+            selectedDayContainerColor = colorResource(R.color.screen_fact_color),
+            todayDateBorderColor = colorResource(R.color.screen_fact_color)
+            )
+
     ) {
         DatePicker(state = datePickerState)
     }
@@ -442,11 +480,14 @@ fun DatePickerModal(onDateSelected: (Long?) -> Unit, onDismiss: () -> Unit) {
 
 @Composable
 fun SeleccionarImporte(
-    importeMax: Float,
-    viewModel: FiltroViewModel
+    filtroViewModel: FiltroViewModel,
+    facturaViewModel: FacturaViewModel
 ) {
 
-    val sliderPosition = viewModel.sliderPosition
+    val sliderPosition = filtroViewModel.sliderPosition
+    val importeMax by facturaViewModel.maxImporte.observeAsState(0)
+    val impMax = importeMax.toFloat()
+
     Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp))
     {
 
@@ -466,7 +507,7 @@ fun SeleccionarImporte(
                 color = Color.LightGray,
             )
             Text(
-                text = stringResource(R.string.max_slider),
+                text = impMax.toString() ,
                 modifier = Modifier.padding(start = 8.dp),
                 color = Color.LightGray,
             )
@@ -474,9 +515,9 @@ fun SeleccionarImporte(
         Slider(
             value = sliderPosition,
             onValueChange = { range ->
-                viewModel.SelectorImporte(range.toInt().toFloat())
+                filtroViewModel.SelectorImporte(range.toInt().toFloat())
             },
-            valueRange = 0f..importeMax,
+            valueRange = 0f..impMax,
             colors = SliderDefaults.colors(
                 thumbColor = colorResource(R.color.screen_fact_color),   // Color de los "puntos" que se arrastran
                 activeTrackColor = colorResource(R.color.screen_fact_color),  // Color de la línea entre los thumbs
