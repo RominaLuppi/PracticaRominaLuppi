@@ -1,5 +1,6 @@
 package com.example.core.ui.view
 
+import android.util.Log
 import androidx.annotation.RestrictTo
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,6 +29,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -42,6 +44,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.core.R
 import com.example.core.ui.viewModel.FacturaViewModel
@@ -59,7 +62,7 @@ fun HomeScreen(navController: NavController,
 
     Scaffold(modifier = Modifier.background(Color.White),
         topBar = {
-            TopAppBar(
+            TopAppBar(colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White),
                 title = {
                     Text(
                         text = stringResource(R.string.title_inicio),
@@ -84,6 +87,7 @@ fun HomeScreen(navController: NavController,
 
         Column(
             modifier = Modifier
+                .background(Color.White)
                 .fillMaxSize()
                 .padding(paddingScaffold),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -108,10 +112,16 @@ fun HomeScreen(navController: NavController,
                 IconButton(
                     onClick = {
                         MockConfig.mockActive = !MockConfig.mockActive
+                        // Log para verificar el cambio
+                        Log.d("MockConfig", "Mock Active: ${MockConfig.mockActive}")
                         facturaViewModel.cargarFacturas()
                         //para mostrar el mensaje con snackbar
                         scope.launch {
-                            snackbarHostState.showSnackbar("Modo mock activado ${MockConfig.mockActive}")
+                            //si esta el mock activado primero borra la base de datos
+                            if (MockConfig.mockActive) {
+                                snackbarHostState.showSnackbar("Modo mock activado")
+                                facturaViewModel.clearAllDatabase()
+                            }else snackbarHostState.showSnackbar("Modo mock desactivado")
                         }
                     },
                 ) {

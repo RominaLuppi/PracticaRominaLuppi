@@ -8,9 +8,15 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface FacturasApiClient {
-   @GET("facturas")
 
+   @Mock
+   @MockResponse(body = "mock_facturas.json")
+   @GET("facturas")
    suspend fun getAllFacturas(): FacturaResponse
+
+//   @GET("facturas")
+//
+//   suspend fun getAllFacturas(): FacturaResponse
 
    @GET("facturas")
    suspend fun getFacturasFiltradas(
@@ -21,10 +27,10 @@ interface FacturasApiClient {
       @Query("estado") estado: List<String>
    ): FacturaResponse
 
-   @Mock
-   @MockResponse(body = "mock_facturas.json")
-   @GET("facturas")
-   suspend fun getMockFacturas(): FacturaResponse
+//   @Mock
+//   @MockResponse(body = "mock_facturas.json")
+//   @GET("facturas")
+//   suspend fun getMockFacturas(): FacturaResponse
 
 
 }

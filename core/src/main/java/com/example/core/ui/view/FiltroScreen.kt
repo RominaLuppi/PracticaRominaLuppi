@@ -1,6 +1,7 @@
 package com.example.core.ui.view
 
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,7 +20,6 @@ import androidx.compose.material.Checkbox
 import androidx.compose.material.Divider
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
@@ -43,6 +43,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -70,9 +71,6 @@ fun FiltrosScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController
 ) {
-    LaunchedEffect(Unit) {
-        filtroViewModel.ResetarFiltros()
-    }
 
     Scaffold(
         topBar = {
@@ -256,6 +254,9 @@ fun AplicarFiltros(
 @Composable
 fun ShowDialog(onDismiss: () -> Unit) {
     AlertDialog(
+        modifier = Modifier.padding(16.dp)
+            .clip(shape = RoundedCornerShape(12.dp)),
+
         onDismissRequest = onDismiss,
         title = {
             Text(
@@ -274,7 +275,8 @@ fun ShowDialog(onDismiss: () -> Unit) {
         },
         confirmButton = {
             Box(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth()
+                    .padding(bottom = 8.dp),
                 contentAlignment = Alignment.Center
             )
             {
@@ -349,12 +351,15 @@ fun SeleccionarEstado(viewModel: FiltroViewModel) {
                     onCheckedChange = {
                         viewModel.SelectorEstado(index, it)
                     },
-//                    colors = CheckboxDefaults.colors(
-//                        checkMarkColor = colorResource(R.color.screen_fact_color))
+                    colors = androidx.compose.material.CheckboxDefaults.colors(
+                        checkedColor = colorResource(R.color.screen_fact_color),
+                        uncheckedColor = Color.Gray
+                    )
                 )
                 Text(
                     text = label[index],
                     modifier = Modifier.align(Alignment.CenterVertically)
+                        .clickable{ viewModel.SelectorEstado(index, !isChecked)} //para hacer el texto clickeable tambien
                 )
             }
         }
@@ -448,6 +453,15 @@ fun CalendFechaHasta(
 @Composable
 fun DatePickerModal(onDateSelected: (Long?) -> Unit, onDismiss: () -> Unit) {
     val datePickerState = rememberDatePickerState()
+    val datePickerColors = DatePickerDefaults.colors(
+        containerColor = Color.White,
+        dayContentColor = Color.Black,
+        disabledDayContentColor = Color.Gray,
+        todayContentColor = Color.Black,
+        selectedDayContainerColor = colorResource(R.color.screen_fact_color),
+        todayDateBorderColor = colorResource(R.color.screen_fact_color)
+    )
+
     DatePickerDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
@@ -455,26 +469,26 @@ fun DatePickerModal(onDateSelected: (Long?) -> Unit, onDismiss: () -> Unit) {
                 onDateSelected(datePickerState.selectedDateMillis)
                 onDismiss()
             }
-
-            ) { Text(stringResource(R.string.aceptar),
-                color = colorResource(R.color.screen_fact_color)) }
+                ) { Text(stringResource(R.string.aceptar),
+                color = colorResource(R.color.screen_fact_color))
+            }
 
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
+            TextButton(onClick = onDismiss)
+
+            {
                 Text(stringResource(R.string.cancelar),
-                color = colorResource(R.color.screen_fact_color)) }
+                color = colorResource(R.color.screen_fact_color))
+            }
         },
-        colors = DatePickerDefaults.colors(
-            containerColor = Color.White,
-            dayContentColor = Color.White,
-            disabledDayContentColor = Color.White,
-            selectedDayContainerColor = colorResource(R.color.screen_fact_color),
-            todayDateBorderColor = colorResource(R.color.screen_fact_color)
-            )
+        colors = datePickerColors
 
     ) {
-        DatePicker(state = datePickerState)
+        DatePicker(state = datePickerState,
+            colors = datePickerColors,
+
+        )
     }
 }
 

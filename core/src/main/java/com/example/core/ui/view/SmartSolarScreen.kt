@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
@@ -43,6 +44,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
@@ -85,7 +88,7 @@ fun SmartSolarScreen(
                             text = stringResource(R.string.topBar_smart_solar),
                             color = colorResource(R.color.screen_fact_color),
                             fontSize = 18.sp,
-                            modifier = Modifier.clickable{navController.popBackStack()}
+                            modifier = Modifier.clickable { navController.popBackStack() }
                         )
                     }
                 },
@@ -109,63 +112,63 @@ fun SmartSolarScreen(
             )
         }) { paddingScaffold ->
 
-        Column(
-            modifier = Modifier
-                .padding(paddingScaffold)
-                .verticalScroll(rememberScrollState())
 
-        ) {
-            Text(
-                modifier = Modifier.padding(start = 16.dp, bottom = 24.dp),
-                text = stringResource(R.string.title_smart_solar),
-                fontFamily = FontFamily.Default,
-                fontWeight = FontWeight.Bold,
-                fontSize = 28.sp,
-                color = Color.Black
-            )
-            val currentPage = pagerStates.currentPage
-            TabRow(
-                selectedTabIndex = currentPage,
+         Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                contentColor = Color.Black,
-                containerColor = Color.White,
-                indicator = { tabPositions ->
-                    Box(
-                        modifier = Modifier
-                            .tabIndicatorOffset(tabPositions[currentPage])
-                            .height(2.dp)
-                            .background(color = Color.Black)
-
-                    )
-                }
+                    .padding(paddingScaffold)
 
             ) {
-                tabNames.forEachIndexed { index, title ->
-                    Tab(
-                        selected = pagerStates.currentPage == index,
-                        onClick = {
-                            coroutineScope.launch { pagerStates.animateScrollToPage(index) }
-                        },
-                        text = {
-                            Text(
-                                text = title,
-                                fontSize = 14.sp
-                            )
-                        }
-                    )
-                }
-            }
-            HorizontalPager(
-                state = pagerStates,
-                modifier = Modifier.fillMaxSize()
+                Text(
+                    modifier = Modifier.padding(start = 16.dp, bottom = 24.dp),
+                    text = stringResource(R.string.title_smart_solar),
+                    fontFamily = FontFamily.Default,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 28.sp,
+                    color = Color.Black
+                )
+                val currentPage = pagerStates.currentPage
+                TabRow(
+                    selectedTabIndex = currentPage,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    contentColor = Color.Black,
+                    containerColor = Color.White,
+                    indicator = { tabPositions ->
+                        Box(
+                            modifier = Modifier
+                                .tabIndicatorOffset(tabPositions[currentPage])
+                                .height(2.dp)
+                                .background(color = Color.Black)
 
-            ) { page ->
-                when (page) {
-                    0 -> TabMiInstalacionview()
-                    1 -> TabEnergiaView()
-                    2 -> TabDetallesView(smartSolarViewModel)
+                        )
+                    }
+
+                ) {
+                    tabNames.forEachIndexed { index, title ->
+                        Tab(
+                            selected = pagerStates.currentPage == index,
+                            onClick = {
+                                coroutineScope.launch { pagerStates.animateScrollToPage(index) }
+                            },
+                            text = {
+                                Text(
+                                    text = title,
+                                    fontSize = 14.sp
+                                )
+                            }
+                        )
+                    }
+                }
+                HorizontalPager(
+                    state = pagerStates,
+                    modifier = Modifier.fillMaxSize()
+
+                ) { page ->
+                    when (page) {
+                        0 -> TabMiInstalacionview()
+                        1 -> TabEnergiaView()
+                        2 -> TabDetallesView(smartSolarViewModel)
 
                     }
                 }
@@ -181,6 +184,8 @@ fun InfoDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
+        modifier = Modifier.padding(16.dp)
+            .clip(shape = RoundedCornerShape(12.dp)),
         title = {
             Text(
                 text = stringResource(id = R.string.title_info),
@@ -219,6 +224,7 @@ fun InfoDialog(
     )
 
 }
+
 @Composable
 fun TabDetallesView(
     smartSolarViewModel: SmartSolarViewModel
@@ -227,128 +233,135 @@ fun TabDetallesView(
 
     val detalle = smartSolarViewModel.detalle
 
-    Column(
+    Box(
         modifier = Modifier
-            .padding(8.dp)
             .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(4.dp)
-    )
-    {
-        Spacer(modifier = Modifier.height(12.dp))
-        Text(
-            text = stringResource(R.string.text_cau),
-            color = Color.Gray,
-            fontSize = 12.sp,
-            modifier = Modifier.padding(start = 16.dp)
-        )
-        TextField(
-            value = detalle.cau,
-            onValueChange = {  },
-            maxLines = 1,
+            .padding(8.dp)
+    ){
+        Column(
             modifier = Modifier
-                .padding(bottom = 8.dp)
-                .fillMaxWidth(),
-            textStyle = TextStyle(textAlign = TextAlign.Start),
-            colors = textViewFieldColors(),
-            readOnly = true
+                .padding(8.dp)
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(2.dp)
         )
-        Spacer(modifier = Modifier.height(6.dp))
-        Text(
-            text = stringResource(R.string.text_estado_solicitud),
-            color = Color.Gray,
-            fontSize = 12.sp,
-            modifier = Modifier.padding(start = 16.dp)
-        )
-        TextField(
-            value = detalle.estadoSolicitud,
-            onValueChange = { },
-            maxLines = 2,
-            modifier = Modifier
-                .padding(bottom = 8.dp)
-                .fillMaxWidth(),
-            colors = textViewFieldColors(),
-            readOnly = true,
+        {
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = stringResource(R.string.text_cau),
+                color = Color.Gray,
+                fontSize = 12.sp,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+            TextField(
+                value = detalle.cau,
+                onValueChange = { },
+                maxLines = 1,
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .fillMaxWidth(),
+                textStyle = TextStyle(textAlign = TextAlign.Start),
+                colors = textViewFieldColors(),
+                readOnly = true
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = stringResource(R.string.text_estado_solicitud),
+                color = Color.Gray,
+                fontSize = 12.sp,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+            TextField(
+                value = detalle.estadoSolicitud,
+                onValueChange = { },
+                maxLines = 2,
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .fillMaxWidth(),
+                colors = textViewFieldColors(),
+                readOnly = true,
 
-            trailingIcon = {
-                IconButton(onClick = { showDialog = true }) {
-                    Icon(
-                        imageVector = Icons.Outlined.Info,
-                        contentDescription = stringResource(R.string.info),
-                        tint = colorResource(R.color.icon_info_color),
-                        modifier = Modifier.padding(bottom = 6.dp)
-                    )
+                trailingIcon = {
+                    IconButton(onClick = { showDialog = true }) {
+                        Icon(
+                            imageVector = Icons.Outlined.Info,
+                            contentDescription = stringResource(R.string.info),
+                            tint = colorResource(R.color.icon_info_color),
+                            modifier = Modifier.padding(bottom = 6.dp)
+                        )
+                    }
                 }
-            }
-        )
-        Spacer(modifier = Modifier.height(6.dp))
-        Text(
-            text = stringResource(R.string.text_tipo),
-            color = Color.Gray,
-            fontSize = 12.sp,
-            modifier = Modifier.padding(start = 16.dp)
-        )
-        TextField(
-            value = detalle.tipoAutoconsumo,
-            onValueChange = { },
-            maxLines = 2,
-            modifier = Modifier
-                .padding(bottom = 8.dp)
-                .fillMaxWidth(),
-            colors = textViewFieldColors(),
-            readOnly = true
-        )
-        Spacer(modifier = Modifier.height(6.dp))
-        Text(
-            text = stringResource(R.string.text_compensacion),
-            color = Color.Gray,
-            fontSize = 12.sp,
-            modifier = Modifier.padding(start = 16.dp)
-        )
-        TextField(
-            value = detalle.compensacion,
-            onValueChange = { },
-            maxLines = 1,
-            modifier = Modifier
-                .padding(bottom = 8.dp)
-                .fillMaxWidth(),
-            colors = textViewFieldColors(),
-            readOnly = true
-        )
-        Spacer(modifier = Modifier.height(6.dp))
-        Text(
-            text = stringResource(R.string.text_potencia),
-            color = Color.Gray,
-            fontSize = 12.sp,
-            modifier = Modifier.padding(start = 16.dp)
-        )
-        TextField(
-            value = detalle.potencia,
-            onValueChange = { },
-            maxLines = 1,
-            modifier = Modifier
-                .padding(bottom = 8.dp)
-                .fillMaxWidth(),
-            colors = textViewFieldColors(),
-            readOnly = true
-        )
-
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = stringResource(R.string.text_tipo),
+                color = Color.Gray,
+                fontSize = 12.sp,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+            TextField(
+                value = detalle.tipoAutoconsumo,
+                onValueChange = { },
+                maxLines = 2,
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .fillMaxWidth(),
+                colors = textViewFieldColors(),
+                readOnly = true
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = stringResource(R.string.text_compensacion),
+                color = Color.Gray,
+                fontSize = 12.sp,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+            TextField(
+                value = detalle.compensacion,
+                onValueChange = { },
+                maxLines = 1,
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .fillMaxWidth(),
+                colors = textViewFieldColors(),
+                readOnly = true
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = stringResource(R.string.text_potencia),
+                color = Color.Gray,
+                fontSize = 12.sp,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+            TextField(
+                value = detalle.potencia,
+                onValueChange = { },
+                maxLines = 1,
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .fillMaxWidth(),
+                colors = textViewFieldColors(),
+                readOnly = true
+            )
+        }
     }
+
     if (showDialog) {
         InfoDialog(
-            onDismiss = {showDialog = false}
+            onDismiss = { showDialog = false }
         )
     }
-
 }
+
 @Composable
 fun textViewFieldColors() = TextFieldDefaults.colors(
-focusedIndicatorColor = Color.Black,
-focusedContainerColor = Color.Transparent,
-unfocusedContainerColor = Color.Transparent,
-disabledContainerColor = Color.Transparent,
-disabledTextColor = Color.Black
+    focusedIndicatorColor = Color.Black,
+    focusedContainerColor = Color.Transparent,
+    unfocusedContainerColor = Color.Transparent,
+    disabledContainerColor = Color.Transparent,
+    disabledTextColor = Color.Black
 )
+
 @Composable
 fun TabEnergiaView() {
     Column(
@@ -379,6 +392,7 @@ fun TabEnergiaView() {
     }
 
 }
+
 @Composable
 fun TabMiInstalacionview() {
     Column(

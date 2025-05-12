@@ -1,10 +1,12 @@
 package com.example.data.database
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.data.model.FacturaEntity
+import com.example.domain.Factura
 
 @Dao
 interface FacturasDao {
@@ -31,5 +33,8 @@ interface FacturasDao {
         estado: List<String>
     ): List<FacturaEntity>
 
+    //para borrar la base de datos
+    @Query("DELETE FROM facturas_table")
+    suspend fun deleteAllDatabase()
 
 }

@@ -1,12 +1,16 @@
 package com.example.core.ui.viewModel
 
+import android.app.Application
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.data.database.FacturasDao
 import com.example.data.repository.GetFacturasUseCaseData
 import com.example.domain.Factura
 import com.example.domain.FacturaFiltroState
+import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -17,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class FacturaViewModel @Inject constructor(
     private val getFacturasUseCaseData: GetFacturasUseCaseData,
-//    private val getFacturasUseCase: GetFacturasUseCase
+    private val facturasDao: FacturasDao
 ) : ViewModel() {
 
     private val _factura = MutableLiveData<List<Factura>>()
@@ -40,6 +44,7 @@ class FacturaViewModel @Inject constructor(
 
     fun cargarFacturas() {
         viewModelScope.launch {
+
             _isLoading.postValue(true)
             try {
                 val result: List<Factura>? = getFacturasUseCaseData()
@@ -121,6 +126,19 @@ class FacturaViewModel @Inject constructor(
     //para restablecer las facturas a su estado original sin filtros
     fun resetFacturas() {
         _factura.value = facturaOriginal
+    }
+
+     fun clearAllDatabase(){
+        viewModelScope.launch {
+            try{
+                Log.d("FacturaViewModel", "Intentando borrar la base de datos...")
+                facturasDao.deleteAllDatabase()
+                Log.d("FacturaViewModel", "Base de datos borrada correctamente")
+            }catch (e: Exception){
+                Log.e("FacturaViewModel", "Error al borrar la base de datos", e)
+            }
+
+        }
     }
 
 }

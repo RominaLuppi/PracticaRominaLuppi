@@ -1,5 +1,6 @@
 package com.example.data.repository
 
+import android.util.Log
 import com.example.data.RetrofitRepository
 import com.example.data.RetromockRepository
 import com.example.data.database.FacturasDao
@@ -13,11 +14,12 @@ import com.example.domain.FacturaFiltroState
 import javax.inject.Inject
 
 class FacturaRepositoryImpl @Inject constructor(
-    @RetrofitRepository private val apiClient: FacturasApiClient, //retrofit
-    @RetromockRepository private val mockApiClient: FacturasApiClient, //retromock
+    @RetrofitRepository private val retrofitClient: FacturasApiClient, //retrofit
+    @RetromockRepository private val mockClient: FacturasApiClient, //retromock
     private val facturasDao: FacturasDao    //room
 
 ) : FacturaRepository {
+
 
     override suspend fun getAllFacturas(): List<Factura>? {
         //intentar obtener desde la BD
@@ -27,8 +29,11 @@ class FacturaRepositoryImpl @Inject constructor(
             return facturasFromDb.map { it.toDomain() }
         } else {
             //si no hay facturas en la BD se obtienen de la api usando Retrofit o Retromock
-            val apiClient = if (MockConfig.mockActive) mockApiClient else apiClient
-            val facturaResponse = apiClient.getAllFacturas()
+            val selectedClient = if (MockConfig.mockActive) mockClient else retrofitClient
+            Log.d("FacturaRepository", "Selected client: ${if (MockConfig.mockActive) "Mock" else "Retrofit"}")
+
+            val facturaResponse = selectedClient.getAllFacturas()
+            Log.d("FacturaRepository", "Factura response: ${facturaResponse}")
 
             //se convierten las facturas dto a entidades para la DB
             val facturaEntityList = facturaResponse.facturas.map { it.toEntity() }
@@ -57,7 +62,7 @@ class FacturaRepositoryImpl @Inject constructor(
             return factutasFromDb.map { it.toDomain() }
         } else {
             //si no hay facturas en la bd, se obtienen de la Api
-            val facturaFromApi = apiClient.getFacturasFiltradas(
+            val facturaFromApi = retrofitClient.getFacturasFiltradas(
                 fechaDesde = filtro.fechaDesde,
                 fechaHasta = filtro.fechaHasta,
                 importeMin = filtro.importeMin,
