@@ -155,7 +155,7 @@ fun FiltrosScreen(
                 fontWeight = FontWeight.Bold
             )
 
-            SeleccionarImporte( filtroViewModel, facturaViewModel)
+            SeleccionarImporte(filtroViewModel, facturaViewModel)
 
             Divider(
                 modifier = Modifier.padding(start = 16.dp, top = 30.dp, end = 16.dp),
@@ -164,7 +164,7 @@ fun FiltrosScreen(
                 startIndent = 0.dp
             )
             SeleccionarEstado(filtroViewModel)
-                Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(10.dp))
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -215,29 +215,29 @@ fun AplicarFiltros(
             val fechaDesde = filtroViewModel.fechaDesde
             val fechaHasta = filtroViewModel.fechaHasta
 
-            if(fechaDesde != null && fechaHasta != null && fechaDesde > fechaHasta)
-            {
+            if (fechaDesde != null && fechaHasta != null && fechaDesde > fechaHasta) {
                 filtroViewModel.mostrarMsgError("El rango de fechas no es válido")
                 return@Button
             }
 
-                //se construye el filtro
-                val filtroActual = filtroViewModel.ConstruirFiltroState()
+            //se construye el filtro
+            val filtroActual = filtroViewModel.ConstruirFiltroState()
 
-                //se actualiza el filtro en el viewModel
-                filtroViewModel.actualizarFiltro(filtroActual)
+            //se actualiza el filtro en el viewModel
+            filtroViewModel.actualizarFiltro(filtroActual)
 
-                //se filtran las facturas
-                val facturasFiltradas = facturaViewModel.filtrarFacturas(facturasOrig ?: emptyList(), filtroActual)
+            //se filtran las facturas
+            val facturasFiltradas =
+                facturaViewModel.filtrarFacturas(facturasOrig ?: emptyList(), filtroActual)
 
-                //si no hay facturas por mostrar se muestra el Dialog
-                if(facturasFiltradas.isEmpty()){
-                    showDialog = true
-                }else{
-                    //se actualiza la lista de facturas
-                    facturaViewModel.actualizarFacturas(facturasFiltradas)
+            //si no hay facturas por mostrar se muestra el Dialog
+            if (facturasFiltradas.isEmpty()) {
+                showDialog = true
+            } else {
+                //se actualiza la lista de facturas
+                facturaViewModel.actualizarFacturas(facturasFiltradas)
 
-                    navController.popBackStack()
+                navController.popBackStack()
 
             }
 
@@ -254,7 +254,8 @@ fun AplicarFiltros(
 @Composable
 fun ShowDialog(onDismiss: () -> Unit) {
     AlertDialog(
-        modifier = Modifier.padding(16.dp)
+        modifier = Modifier
+            .padding(16.dp)
             .clip(shape = RoundedCornerShape(12.dp)),
 
         onDismissRequest = onDismiss,
@@ -275,7 +276,8 @@ fun ShowDialog(onDismiss: () -> Unit) {
         },
         confirmButton = {
             Box(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(bottom = 8.dp),
                 contentAlignment = Alignment.Center
             )
@@ -358,8 +360,14 @@ fun SeleccionarEstado(viewModel: FiltroViewModel) {
                 )
                 Text(
                     text = label[index],
-                    modifier = Modifier.align(Alignment.CenterVertically)
-                        .clickable{ viewModel.SelectorEstado(index, !isChecked)} //para hacer el texto clickeable tambien
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .clickable {
+                            viewModel.SelectorEstado(
+                                index,
+                                !isChecked
+                            )
+                        } //para hacer el texto clickeable tambien
                 )
             }
         }
@@ -380,7 +388,8 @@ fun CalendFechaDesde(viewModel: FiltroViewModel) {
             viewModel.limpiarMsgErrorFechaDesde()
         }
     }
-    val formattedDate = selectedDate?.let { it
+    val formattedDate = selectedDate?.let {
+        it
         val date = Date(it)
         SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(date)
     } ?: stringResource(R.string.btn_fecha)
@@ -401,11 +410,16 @@ fun CalendFechaDesde(viewModel: FiltroViewModel) {
             onDateSelected = {
                 viewModel.ActualizarFechaDesde(it)
             },
-            onDismiss = { showDate = false }
+            onDismiss = { showDate = false },
+            title = {
+                Text(
+                    stringResource(R.string.title_date_desde),
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
         )
     }
 }
-
 @Composable
 fun CalendFechaHasta(
     viewModel: FiltroViewModel
@@ -422,7 +436,6 @@ fun CalendFechaHasta(
             viewModel.limpiarMsgErrorFechaHasta()
         }
     }
-
     val formattedDate = selectedDate?.let {
         val date = Date(it)
         SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(date)
@@ -444,14 +457,23 @@ fun CalendFechaHasta(
             onDateSelected = {
                 viewModel.ActualizarFechaHasta(it)
             },
-            onDismiss = { showDate = false }
+            onDismiss = { showDate = false },
+            title = {
+                Text(
+                    stringResource(R.string.title_date_hasta),
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
         )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DatePickerModal(onDateSelected: (Long?) -> Unit, onDismiss: () -> Unit) {
+fun DatePickerModal(
+    onDateSelected: (Long?) -> Unit, onDismiss: () -> Unit,
+    title: (@Composable () -> Unit)? = null
+) {
     val datePickerState = rememberDatePickerState()
     val datePickerColors = DatePickerDefaults.colors(
         containerColor = Color.White,
@@ -469,8 +491,11 @@ fun DatePickerModal(onDateSelected: (Long?) -> Unit, onDismiss: () -> Unit) {
                 onDateSelected(datePickerState.selectedDateMillis)
                 onDismiss()
             }
-                ) { Text(stringResource(R.string.aceptar),
-                color = colorResource(R.color.screen_fact_color))
+            ) {
+                Text(
+                    stringResource(R.string.aceptar),
+                    color = colorResource(R.color.screen_fact_color)
+                )
             }
 
         },
@@ -478,15 +503,19 @@ fun DatePickerModal(onDateSelected: (Long?) -> Unit, onDismiss: () -> Unit) {
             TextButton(onClick = onDismiss)
 
             {
-                Text(stringResource(R.string.cancelar),
-                color = colorResource(R.color.screen_fact_color))
+                Text(
+                    stringResource(R.string.cancelar),
+                    color = colorResource(R.color.screen_fact_color)
+                )
             }
         },
         colors = datePickerColors
 
     ) {
-        DatePicker(state = datePickerState,
+        DatePicker(
+            state = datePickerState,
             colors = datePickerColors,
+            title = { title?.invoke() }
 
         )
     }
@@ -521,7 +550,7 @@ fun SeleccionarImporte(
                 color = Color.LightGray,
             )
             Text(
-                text = impMax.toString() ,
+                text = impMax.toString(),
                 modifier = Modifier.padding(start = 8.dp),
                 color = Color.LightGray,
             )

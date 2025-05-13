@@ -128,7 +128,7 @@ class FacturaViewModel @Inject constructor(
         _factura.value = facturaOriginal
     }
 
-     fun clearAllDatabase(){
+     suspend fun clearAllDatabase(){
         viewModelScope.launch {
             try{
                 Log.d("FacturaViewModel", "Intentando borrar la base de datos...")

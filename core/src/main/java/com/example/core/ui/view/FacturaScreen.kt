@@ -1,6 +1,7 @@
 package com.example.core.ui.view
 
 
+import android.view.View
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -78,7 +79,7 @@ fun FacturaScreen(
     }
 
     var showDialog by remember { mutableStateOf(false) } //visibilidad del popup
-    val isLoading = facturaViewModel.isLoading.value ?: true
+    val isLoading by facturaViewModel.isLoading.observeAsState(false)
 
     val facturasFiltradas by sharedViewModel.facturasFiltradas.observeAsState(emptyList())
 
@@ -166,6 +167,7 @@ fun FacturaScreen(
         if (isLoading) {
             CircularProgressIndicator()
         }
+
     }
 }
 

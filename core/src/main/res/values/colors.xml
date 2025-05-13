@@ -4,4 +4,6 @@
     <color name="btn_fecha_color">#CDD0CD</color>
 
     <color name="icon_info_color">#5BADEF</color>
+
+    <color name="debug_icon_color">#C2CCB6</color>
 </resources>

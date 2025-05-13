@@ -20,7 +20,6 @@ class FacturaRepositoryImpl @Inject constructor(
 
 ) : FacturaRepository {
 
-
     override suspend fun getAllFacturas(): List<Factura>? {
         //intentar obtener desde la BD
         val facturasFromDb = facturasDao.getAllFacturas()
@@ -30,10 +29,10 @@ class FacturaRepositoryImpl @Inject constructor(
         } else {
             //si no hay facturas en la BD se obtienen de la api usando Retrofit o Retromock
             val selectedClient = if (MockConfig.mockActive) mockClient else retrofitClient
-            Log.d("FacturaRepository", "Selected client: ${if (MockConfig.mockActive) "Mock" else "Retrofit"}")
+//            Log.d("FacturaRepository", "Selected client: ${if (MockConfig.mockActive) "Mock" else "Retrofit"}")
 
             val facturaResponse = selectedClient.getAllFacturas()
-            Log.d("FacturaRepository", "Factura response: ${facturaResponse}")
+//            Log.d("FacturaRepository", "Factura response: ${facturaResponse}")
 
             //se convierten las facturas dto a entidades para la DB
             val facturaEntityList = facturaResponse.facturas.map { it.toEntity() }
@@ -46,7 +45,6 @@ class FacturaRepositoryImpl @Inject constructor(
         }
     }
 
-
     //obtener las facturas filtradas
     override suspend fun getFacturasFiltradas(filtro: FacturaFiltroState): List<Factura>? {
         //obtener las facturas filtradas desde la bd
@@ -57,7 +55,6 @@ class FacturaRepositoryImpl @Inject constructor(
             importeMax = filtro.importeMax,
             estado = filtro.estado
         )
-
         if (factutasFromDb.isNotEmpty()) {
             return factutasFromDb.map { it.toDomain() }
         } else {

@@ -25,6 +25,8 @@
     <string name="text_por_importe">Por un importe</string>
     <string name="min_slider">1€</string>
 
+    <string name="title_date_desde">Fecha desde</string>
+    <string name="title_date_hasta">Fecha hasta</string>
 
     <string name="text_por_estado">Por estado</string>
     <string name="pagadas">Pagadas</string>
