@@ -1,6 +1,5 @@
 package com.example.core.ui.viewModel
 
-import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,7 +9,6 @@ import com.example.data.database.FacturasDao
 import com.example.data.repository.GetFacturasUseCaseData
 import com.example.domain.Factura
 import com.example.domain.FacturaFiltroState
-import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -81,23 +79,31 @@ class FacturaViewModel @Inject constructor(
 
         val formatoFecha = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
+
         return facturasOrig.filter { factura ->
             var esValido = true
 
+            // Verificar si la factura tiene una fecha válida
+            val fechaFactura = if (factura.fecha.isNotEmpty()) {
+                formatoFecha.parse(factura.fecha)
+            } else {
+                null  // Si la fecha de la factura está vacía, no la consideramos
+            }
+
             //filtro por fecha desde
-            if (filtro.fechaDesde.isNotEmpty()) {
+            if (filtro.fechaDesde.isNotEmpty() && fechaFactura != null) {
                 val fechaDesde = formatoFecha.parse(filtro.fechaDesde)
-                val fechaFactura = formatoFecha.parse(factura.fecha)
-                if (fechaFactura?.before(fechaDesde) == true) {
+//                val fechaFactura = formatoFecha.parse(factura.fecha)
+                if (fechaFactura.before(fechaDesde) == true) {
                     esValido = false
                 }
             }
 
             //filtro por fecha hasta
-            if (filtro.fechaHasta.isNotEmpty()) {
+            if (filtro.fechaHasta.isNotEmpty() && fechaFactura != null) {
                 val fechaHasta = formatoFecha.parse(filtro.fechaHasta)
-                val fechaFactura = formatoFecha.parse(factura.fecha)
-                if (fechaFactura?.after(fechaHasta) == true) {
+//                val fechaFactura = formatoFecha.parse(factura.fecha)
+                if (fechaFactura.after(fechaHasta) == true) {
                     esValido = false
                 }
             }
@@ -129,16 +135,11 @@ class FacturaViewModel @Inject constructor(
     }
 
      suspend fun clearAllDatabase(){
-        viewModelScope.launch {
-            try{
-                Log.d("FacturaViewModel", "Intentando borrar la base de datos...")
-                facturasDao.deleteAllDatabase()
-                Log.d("FacturaViewModel", "Base de datos borrada correctamente")
-            }catch (e: Exception){
-                Log.e("FacturaViewModel", "Error al borrar la base de datos", e)
-            }
+//        viewModelScope.launch {
+         facturasDao.deleteAllDatabase()
+     }
 
-        }
-    }
+//        }
+
 
 }

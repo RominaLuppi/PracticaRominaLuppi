@@ -1,29 +1,18 @@
 package com.example.core.ui.viewModel
 
 
-import android.os.Build
-import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.core.R
+import androidx.lifecycle.ViewModel
 import com.example.domain.FacturaFiltroState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.text.SimpleDateFormat
-import java.time.Instant
-import java.time.LocalDate
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.util.Calendar
-import java.util.Date
 import java.util.Locale
-import kotlin.contracts.contract
 
 
 class FiltroViewModel: ViewModel() {
