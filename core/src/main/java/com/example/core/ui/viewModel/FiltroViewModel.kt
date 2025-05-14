@@ -14,21 +14,16 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-
 class FiltroViewModel: ViewModel() {
 
-
     var fechaDesde by mutableStateOf<Long?>(null)
-        private set
-
+//        private set
     var fechaHasta by mutableStateOf<Long?>(null)
-        private set
-
+//        private set
     var sliderPosition by mutableStateOf(0f)
-        private set
-
+//        private set
     var checkedState by mutableStateOf(List(5) { false })
-        private set
+//        private set
 
     val _errorMsgDesde = MutableStateFlow<String?>(null)
     val errorMsgDesde = _errorMsgDesde.asStateFlow()
@@ -39,22 +34,26 @@ class FiltroViewModel: ViewModel() {
     val _errorMsg = MutableStateFlow<String?>(null)
     val errorMsg = _errorMsg.asStateFlow()
 
-
     fun motrarMsgErrorFechaDesde(mensaje: String){
         _errorMsgDesde.value = mensaje
     }
+
     fun limpiarMsgErrorFechaDesde(){
         _errorMsgDesde.value = null
     }
+
     fun motrarMsgErrorFechaHasta(mensaje: String){
         _errorMsgHasta.value = mensaje
     }
+
     fun limpiarMsgErrorFechaHasta(){
         _errorMsgHasta.value = null
     }
+
     fun mostrarMsgError(mensaje: String){
         _errorMsg.value =mensaje
     }
+
     fun limpiarMsgError(){
         _errorMsg.value = null
     }
@@ -74,8 +73,8 @@ class FiltroViewModel: ViewModel() {
       }else{
           fechaDesde = date
       }
-
     }
+
     fun ActualizarFechaHasta(date: Long?){
         if(date == null)
             return
@@ -88,7 +87,6 @@ class FiltroViewModel: ViewModel() {
         if (date > hoy){
             val msg = "Debe seleccionar una fecha válida"
             motrarMsgErrorFechaHasta(msg)
-
         }else{
             fechaHasta = date
         }
@@ -133,9 +131,5 @@ class FiltroViewModel: ViewModel() {
             importeMax = sliderPosition.toDouble(),
             estado = estadosSeleccionados
         )
-
-
     }
-
-
 }

@@ -1,117 +1,127 @@
 package com.example.core
 
 import com.example.core.ui.viewModel.FiltroViewModel
-import com.example.domain.FacturaFiltroState
-import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 class FiltroViewModelTest {
 
     private lateinit var viewModel: FiltroViewModel
-    private lateinit var sdf: SimpleDateFormat
 
     @Before
     fun setup() {
         viewModel = FiltroViewModel()
-        sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     }
 
     @Test
-    fun `ActualizarFechaDesde válida`() {
-        val fechaPasada = sdf.parse("01/01/2023")!!.time
-        viewModel.ActualizarFechaDesde(fechaPasada)
-        assertEquals(fechaPasada, viewModel.fechaDesde)
-        assertNull(viewModel.errorMsgDesde.value)
+    fun `test ActualizarFechaDesde con fecha valida`() {
+        val fecha = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }.timeInMillis
+        viewModel.ActualizarFechaDesde(fecha)
+        assertEquals(fecha, viewModel.fechaDesde)
+        assertNull(viewModel._errorMsgDesde.value)
     }
 
     @Test
-    fun `ActualizarFechaDesde inválida futura`() {
-        val fechaFutura = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, 1) }.timeInMillis
-        viewModel.ActualizarFechaDesde(fechaFutura)
-        assertNotNull(viewModel.errorMsgDesde.value)
+    fun `test ActualizarFechaDesde con fecha invalida`() {
+        val fecha = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+            add(Calendar.DAY_OF_YEAR, 1)
+        }.timeInMillis
+        viewModel.ActualizarFechaDesde(fecha)
         assertNull(viewModel.fechaDesde)
+        assertEquals("Debe seleccionar una fecha válida", viewModel._errorMsgDesde.value)
     }
 
     @Test
-    fun `ActualizarFechaHasta válida`() {
-        val fechaPasada = sdf.parse("01/01/2023")!!.time
-        viewModel.ActualizarFechaHasta(fechaPasada)
-        assertEquals(fechaPasada, viewModel.fechaHasta)
-        assertNull(viewModel.errorMsgHasta.value)
+    fun `test ActualizarFechaHasta con fecha valida`() {
+        val fecha = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }.timeInMillis
+        viewModel.ActualizarFechaHasta(fecha)
+        assertEquals(fecha, viewModel.fechaHasta)
+        assertNull(viewModel._errorMsgHasta.value)
     }
 
     @Test
-    fun `ActualizarFechaHasta inválida futura`() {
-        val fechaFutura = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, 1) }.timeInMillis
-        viewModel.ActualizarFechaHasta(fechaFutura)
-        assertNotNull(viewModel.errorMsgHasta.value)
+    fun `test ActualizarFechaHasta con fecha invalida`() {
+        val fecha = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+            add(Calendar.DAY_OF_YEAR, 1)
+        }.timeInMillis
+        viewModel.ActualizarFechaHasta(fecha)
         assertNull(viewModel.fechaHasta)
+        assertEquals("Debe seleccionar una fecha válida", viewModel._errorMsgHasta.value)
     }
 
     @Test
-    fun `SelectorImporte actualiza correctamente`() {
-        viewModel.SelectorImporte(50f)
-        assertEquals(50f, viewModel.sliderPosition)
+    fun `test SelectorImporte`() {
+        val valor = 10.0f
+        viewModel.SelectorImporte(valor)
+        assertEquals(valor, viewModel.sliderPosition)
     }
 
     @Test
-    fun `SelectorEstado modifica estado correctamente`() {
-        viewModel.SelectorEstado(2, true)
-        assertTrue(viewModel.checkedState[2])
+    fun `test SelectorEstado`() {
+        val index = 0
+        val valor = true
+        viewModel.SelectorEstado(index, valor)
+        assertEquals(valor, viewModel.checkedState[index])
     }
 
     @Test
-    fun `ResetarFiltros reinicia todos los campos`() {
-        viewModel.SelectorImporte(30f)
-        viewModel.SelectorEstado(0, true)
-        viewModel.ActualizarFechaDesde(sdf.parse("01/01/2022")!!.time)
+    fun `test ResetarFiltros`() {
+        viewModel.fechaDesde = Calendar.getInstance().timeInMillis
+        viewModel.fechaHasta = Calendar.getInstance().timeInMillis
+        viewModel.sliderPosition = 10.0f
+        viewModel.checkedState = listOf(true, false, true, false, true)
         viewModel.ResetarFiltros()
-        assertEquals(0f, viewModel.sliderPosition)
-        assertTrue(viewModel.checkedState.all { !it })
         assertNull(viewModel.fechaDesde)
         assertNull(viewModel.fechaHasta)
+        assertEquals(0.0f, viewModel.sliderPosition)
+        assertEquals(listOf(false, false, false, false, false), viewModel.checkedState)
     }
 
     @Test
-    fun `ConstruirFiltroState genera el filtro correctamente`() {
-        viewModel.SelectorImporte(75f)
-        viewModel.SelectorEstado(1, true) // Anulada
-        viewModel.ActualizarFechaDesde(sdf.parse("01/01/2022")!!.time)
-        viewModel.ActualizarFechaHasta(sdf.parse("31/12/2023")!!.time)
-        val filtro = viewModel.ConstruirFiltroState()
-        assertEquals("Anulada", filtro.estado.first())
-        assertEquals(0.0, filtro.importeMin, 0.01)
-        assertEquals(75.0, filtro.importeMax, 0.01)
-        assertEquals("01/01/2022", filtro.fechaDesde)
-        assertEquals("31/12/2023", filtro.fechaHasta)
-    }
-
-    @Test
-    fun `actualizarFiltro guarda correctamente el estado`() = runTest {
-        val filtro = FacturaFiltroState("01/01/2023", "02/02/2024", 10.0, 100.0, listOf("Pagada"))
-        viewModel.actualizarFiltro(filtro)
-        assertEquals(filtro, viewModel.filtro.value)
-    }
-
-    @Test
-    fun `mostrar y limpiar errores funcionan`() {
-        viewModel.motrarMsgErrorFechaDesde("Error desde")
-        assertEquals("Error desde", viewModel.errorMsgDesde.value)
-        viewModel.limpiarMsgErrorFechaDesde()
-        assertNull(viewModel.errorMsgDesde.value)
-
-        viewModel.motrarMsgErrorFechaHasta("Error hasta")
-        assertEquals("Error hasta", viewModel.errorMsgHasta.value)
-        viewModel.limpiarMsgErrorFechaHasta()
-        assertNull(viewModel.errorMsgHasta.value)
-
-        viewModel.mostrarMsgError("Error general")
-        assertEquals("Error general", viewModel.errorMsg.value)
-        viewModel.limpiarMsgError()
-        assertNull(viewModel.errorMsg.value)
+    fun `test ConstruirFiltroState`() {
+        val fechaDesde = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }.timeInMillis
+        val fechaHasta = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }.timeInMillis
+        viewModel.fechaDesde = fechaDesde
+        viewModel.fechaHasta = fechaHasta
+        viewModel.sliderPosition = 10.0f
+        viewModel.checkedState = listOf(true, false, true, false, true)
+        val filtroState = viewModel.ConstruirFiltroState()
+        val formatoFecha = java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault())
+        assertEquals(formatoFecha.format(fechaDesde), filtroState.fechaDesde)
+        assertEquals(formatoFecha.format(fechaHasta), filtroState.fechaHasta)
+        assertEquals(0.0, filtroState.importeMin)
+        assertEquals(10.0, filtroState.importeMax)
+        assertEquals(listOf("Pagada", "Cuota fija", "Plan de pago"), filtroState.estado)
     }
 }

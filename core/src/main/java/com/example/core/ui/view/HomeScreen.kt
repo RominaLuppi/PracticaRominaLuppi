@@ -1,7 +1,5 @@
 package com.example.core.ui.view
 
-import android.util.Log
-import androidx.annotation.RestrictTo
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -34,7 +32,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -48,13 +45,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.core.R
 import com.example.core.ui.viewModel.FacturaViewModel
 import com.example.data.di.MockConfig
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,7 +60,6 @@ fun HomeScreen(
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
-//    val isMockActive = remember { mutableStateOf(MockConfig.mockActive) }
 
     Scaffold(
         modifier = Modifier.background(Color.White),
@@ -82,7 +75,6 @@ fun HomeScreen(
                         fontSize = 28.sp
                     )
                 },
-
                 navigationIcon = {
                     Icon(
                         imageVector = Icons.Default.Home,
@@ -111,7 +103,6 @@ fun HomeScreen(
                 thickness = 1.5.dp,
                 startIndent = 0.dp
             )
-
             Spacer(modifier = Modifier.height(24.dp))
 
             Box(
@@ -130,7 +121,7 @@ fun HomeScreen(
                             //si esta el mock activado primero se borra la base de datos
                             facturaViewModel.clearAllDatabase()
 
-                            //y luego se informa al usuario y cargan las facturas
+                            //y luego se informa al usuario y se cargan las facturas
                             if (MockConfig.mockActive) {
                                 snackbarHostState.showSnackbar("Modo mock activado")
                             } else {
@@ -153,7 +144,6 @@ fun HomeScreen(
                     )
                 }
             }
-
             Spacer(modifier = Modifier.height(54.dp))
             Image(
                 painter = painterResource(R.drawable.iberdrola_logo),
@@ -164,7 +154,6 @@ fun HomeScreen(
                 contentScale = ContentScale.Crop,
                 alignment = Alignment.Center
             )
-
             Spacer(modifier = Modifier.height(48.dp))
 
             Row(
@@ -190,7 +179,6 @@ fun HomeScreen(
 
                 Button(
                     modifier = Modifier.width(150.dp),
-
                     onClick = {
                         navController.navigate("SmartSolarScreen")
                     },
@@ -201,11 +189,8 @@ fun HomeScreen(
                         color = Color.White,
                         fontSize = 16.sp
                     )
-
                 }
             }
-
-
         }
     }
 }

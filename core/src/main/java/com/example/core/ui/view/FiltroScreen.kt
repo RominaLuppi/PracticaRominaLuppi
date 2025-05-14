@@ -71,7 +71,6 @@ fun FiltrosScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController
 ) {
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -175,7 +174,6 @@ fun FiltrosScreen(
                 EliminarFiltros(filtroViewModel)
 
             }
-
         }
     }
 }
@@ -184,13 +182,11 @@ fun FiltrosScreen(
 fun AplicarFiltros(
     filtroViewModel: FiltroViewModel,
     facturaViewModel: FacturaViewModel,
-//    sharedViewModel: SharedViewModel,
     navController: NavHostController
 ) {
 
     var showDialog by remember { mutableStateOf(false) }
     val facturasOrig by facturaViewModel.factura.observeAsState()
-    val filtro by filtroViewModel.filtro.observeAsState()
 
     val context = LocalContext.current
     val errorMsg by filtroViewModel.errorMsg.collectAsState()
@@ -238,9 +234,7 @@ fun AplicarFiltros(
                 facturaViewModel.actualizarFacturas(facturasFiltradas)
 
                 navController.popBackStack()
-
             }
-
         },
         colors = ButtonDefaults.buttonColors(colorResource(R.color.screen_fact_color))
     ) {
@@ -257,7 +251,6 @@ fun ShowDialog(onDismiss: () -> Unit) {
         modifier = Modifier
             .padding(16.dp)
             .clip(shape = RoundedCornerShape(12.dp)),
-
         onDismissRequest = onDismiss,
         title = {
             Text(
@@ -304,7 +297,6 @@ fun EliminarFiltros(viewModel: FiltroViewModel) {
         modifier = Modifier.width(250.dp),
         onClick = {
             viewModel.ResetarFiltros()
-
         },
         colors = ButtonDefaults.buttonColors(Color.Gray)
     ) {
@@ -313,7 +305,6 @@ fun EliminarFiltros(viewModel: FiltroViewModel) {
             color = Color.White
         )
     }
-
 }
 
 @Composable
@@ -340,9 +331,7 @@ fun SeleccionarEstado(viewModel: FiltroViewModel) {
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold
         )
-
         checkedState.forEachIndexed { index, isChecked ->  //se maneja el estado de los checkbox de manera independiente
-
             Row(
                 verticalAlignment = Alignment.Top,
                 horizontalArrangement = Arrangement.Start
@@ -367,7 +356,7 @@ fun SeleccionarEstado(viewModel: FiltroViewModel) {
                                 index,
                                 !isChecked
                             )
-                        } //para hacer el texto clickeable tambien
+                        } //para hacer tambien el texto clickeable
                 )
             }
         }
@@ -497,7 +486,6 @@ fun DatePickerModal(
                     color = colorResource(R.color.screen_fact_color)
                 )
             }
-
         },
         dismissButton = {
             TextButton(onClick = onDismiss)
@@ -516,7 +504,6 @@ fun DatePickerModal(
             state = datePickerState,
             colors = datePickerColors,
             title = { title?.invoke() }
-
         )
     }
 }

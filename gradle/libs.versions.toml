@@ -2,10 +2,12 @@
 accompanistPager = "0.32.0"
 agp = "8.9.1"
 androidxComposeMaterial3Material3 = "1.1.0"
+androidxCoreTesting = "2.1.0"
 androidxMaterial3 = "1.0.0"
 androidxMaterial3Version = "1.2.1"
 androidxUi = "1.4.0"
 converterScalars = "2.9.0"
+core = "1.6.1"
 coreTestingVersion = "2.2.0"
 foundation = "1.7.8"
 foundationVersion = "<version>"
@@ -58,8 +60,10 @@ uiVersion = "<version>"
 
 [libraries]
 accompanist-pager = { module = "com.google.accompanist:accompanist-pager", version.ref = "accompanistPager" }
+androidx-core = { module = "androidx.test:core", version.ref = "core" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTestingVersion" }
+androidx-core-testing-v210 = { module = "androidx.arch.core:core-testing", version.ref = "androidxCoreTesting" }
 androidx-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
 androidx-foundation-vversion = { module = "androidx.compose.foundation:foundation", version.ref = "foundationVersion" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }

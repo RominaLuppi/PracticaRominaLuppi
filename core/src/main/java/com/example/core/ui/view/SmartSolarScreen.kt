@@ -45,7 +45,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
@@ -112,70 +111,66 @@ fun SmartSolarScreen(
             )
         }) { paddingScaffold ->
 
+        Column(
+            modifier = Modifier
+                .padding(paddingScaffold)
 
-         Column(
+        ) {
+            Text(
+                modifier = Modifier.padding(start = 16.dp, bottom = 24.dp),
+                text = stringResource(R.string.title_smart_solar),
+                fontFamily = FontFamily.Default,
+                fontWeight = FontWeight.Bold,
+                fontSize = 28.sp,
+                color = Color.Black
+            )
+            val currentPage = pagerStates.currentPage
+            TabRow(
+                selectedTabIndex = currentPage,
                 modifier = Modifier
-                    .padding(paddingScaffold)
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                contentColor = Color.Black,
+                containerColor = Color.White,
+                indicator = { tabPositions ->
+                    Box(
+                        modifier = Modifier
+                            .tabIndicatorOffset(tabPositions[currentPage])
+                            .height(2.dp)
+                            .background(color = Color.Black)
 
-            ) {
-                Text(
-                    modifier = Modifier.padding(start = 16.dp, bottom = 24.dp),
-                    text = stringResource(R.string.title_smart_solar),
-                    fontFamily = FontFamily.Default,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 28.sp,
-                    color = Color.Black
-                )
-                val currentPage = pagerStates.currentPage
-                TabRow(
-                    selectedTabIndex = currentPage,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    contentColor = Color.Black,
-                    containerColor = Color.White,
-                    indicator = { tabPositions ->
-                        Box(
-                            modifier = Modifier
-                                .tabIndicatorOffset(tabPositions[currentPage])
-                                .height(2.dp)
-                                .background(color = Color.Black)
-
-                        )
-                    }
-
-                ) {
-                    tabNames.forEachIndexed { index, title ->
-                        Tab(
-                            selected = pagerStates.currentPage == index,
-                            onClick = {
-                                coroutineScope.launch { pagerStates.animateScrollToPage(index) }
-                            },
-                            text = {
-                                Text(
-                                    text = title,
-                                    fontSize = 14.sp
-                                )
-                            }
-                        )
-                    }
+                    )
                 }
-                HorizontalPager(
-                    state = pagerStates,
-                    modifier = Modifier.fillMaxSize()
+            ) {
+                tabNames.forEachIndexed { index, title ->
+                    Tab(
+                        selected = pagerStates.currentPage == index,
+                        onClick = {
+                            coroutineScope.launch { pagerStates.animateScrollToPage(index) }
+                        },
+                        text = {
+                            Text(
+                                text = title,
+                                fontSize = 14.sp
+                            )
+                        }
+                    )
+                }
+            }
+            HorizontalPager(
+                state = pagerStates,
+                modifier = Modifier.fillMaxSize()
 
-                ) { page ->
-                    when (page) {
-                        0 -> TabMiInstalacionview()
-                        1 -> TabEnergiaView()
-                        2 -> TabDetallesView(smartSolarViewModel)
+            ) { page ->
+                when (page) {
+                    0 -> TabMiInstalacionview()
+                    1 -> TabEnergiaView()
+                    2 -> TabDetallesView(smartSolarViewModel)
 
-                    }
                 }
             }
         }
-
-
+    }
 }
 
 @Composable
@@ -184,7 +179,8 @@ fun InfoDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        modifier = Modifier.padding(16.dp)
+        modifier = Modifier
+            .padding(16.dp)
             .clip(shape = RoundedCornerShape(12.dp)),
         title = {
             Text(
@@ -220,24 +216,21 @@ fun InfoDialog(
                 }
             }
         }
-
     )
-
 }
 
 @Composable
 fun TabDetallesView(
     smartSolarViewModel: SmartSolarViewModel
 ) {
-    var showDialog by remember { mutableStateOf(false) } //visibilidad del popup
-
+    var showDialog by remember { mutableStateOf(false) }
     val detalle = smartSolarViewModel.detalle
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(8.dp)
-    ){
+    ) {
         Column(
             modifier = Modifier
                 .padding(8.dp)
@@ -280,7 +273,6 @@ fun TabDetallesView(
                     .fillMaxWidth(),
                 colors = textViewFieldColors(),
                 readOnly = true,
-
                 trailingIcon = {
                     IconButton(onClick = { showDialog = true }) {
                         Icon(
@@ -389,9 +381,7 @@ fun TabEnergiaView() {
                 .padding(start = 36.dp, end = 36.dp),
             textAlign = TextAlign.Center
         )
-
     }
-
 }
 
 @Composable
@@ -407,7 +397,6 @@ fun TabMiInstalacionview() {
             text = stringResource(R.string.text_mi_instalacion),
             fontSize = 14.sp
         )
-
         Spacer(modifier = Modifier.height(16.dp))
 
         Row(horizontalArrangement = Arrangement.Start)
@@ -418,7 +407,6 @@ fun TabMiInstalacionview() {
                 color = Color.LightGray,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
-
             Text(
                 text = stringResource(R.string.porcentaje_smart_solar),
                 fontSize = 14.sp,
@@ -426,7 +414,6 @@ fun TabMiInstalacionview() {
                 modifier = Modifier.padding(bottom = 12.dp)
             )
         }
-
         Image(
             painter = painterResource(R.drawable.grafico_smart_solar),
             contentDescription = stringResource(R.string.image_mi_instalación),
@@ -435,9 +422,6 @@ fun TabMiInstalacionview() {
                 .align(Alignment.CenterHorizontally),
             contentScale = ContentScale.Crop
         )
-
-
     }
-
 }
 

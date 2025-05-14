@@ -16,10 +16,10 @@ class SharedViewModel @Inject constructor(
     private val getFacturasFiltradasUseCase : GetFacturasFiltradasUseCase
 ): ViewModel()
 {
-    private val _facturasFiltradas = MutableLiveData<List<Factura>>()
+    val _facturasFiltradas = MutableLiveData<List<Factura>>()
     var facturasFiltradas: LiveData<List<Factura>> = _facturasFiltradas
 
-    private val _errorMsg = MutableLiveData<String>()
+    val _errorMsg = MutableLiveData<String>()
     val errorMsg: LiveData<String> = _errorMsg
 
     private val _filtroState = MutableLiveData(FacturaFiltroState("", "", 0.0, 0.0, emptyList()))
@@ -41,7 +41,6 @@ class SharedViewModel @Inject constructor(
                 _errorMsg.postValue("Error al filtrar las facturas")
             }
         }
-
     }
 }
 

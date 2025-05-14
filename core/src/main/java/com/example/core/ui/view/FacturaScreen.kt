@@ -1,7 +1,6 @@
 package com.example.core.ui.view
 
 
-import android.view.View
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -48,19 +47,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.intl.Locale
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.core.R
 import com.example.core.ui.viewModel.FacturaViewModel
 import com.example.core.ui.viewModel.SharedViewModel
-import com.example.data.di.MockConfig
 import com.example.domain.Factura
-import java.text.SimpleDateFormat
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,18 +62,15 @@ fun FacturaScreen(
     facturaViewModel: FacturaViewModel,
     sharedViewModel: SharedViewModel,
     navController: NavHostController,
-    onFilterClick: () -> Unit //para hacer clickeable el icono del filtro
+    onFilterClick: () -> Unit
 
 ) {
-
-    //para al volver a cargar la pantalla y que se muestren todas las facturas
+    //al volver a cargar la pantalla se muestran todas las facturas
     LaunchedEffect(Unit) {
         facturaViewModel.resetFacturas()
     }
-
-    var showDialog by remember { mutableStateOf(false) } //visibilidad del popup
+    var showDialog by remember { mutableStateOf(false) }
     val isLoading by facturaViewModel.isLoading.observeAsState(false)
-
     val facturasFiltradas by sharedViewModel.facturasFiltradas.observeAsState(emptyList())
 
     Scaffold(modifier = Modifier.background(Color.White),
@@ -110,7 +100,6 @@ fun FacturaScreen(
 
                         )
                     }
-
                 },
                 actions = {
                     IconButton(onClick = onFilterClick) {
@@ -120,15 +109,11 @@ fun FacturaScreen(
                         )
                     }
                 }
-
             )
-
         }) { paddingScaffold ->
-
         Column(
             modifier = Modifier
                 .padding(paddingScaffold) //para no tapar el TopAppBar
-
         ) {
             Text(
                 modifier = Modifier.padding(start = 16.dp),
@@ -138,7 +123,6 @@ fun FacturaScreen(
                 fontSize = 28.sp,
                 color = Color.Black
             )
-
             FacturasList(
                 list = if (facturasFiltradas.isNotEmpty()) {
                     facturasFiltradas
@@ -151,7 +135,6 @@ fun FacturaScreen(
                 onClick = {
                     showDialog = true
                 }
-
             )
         }
     }
@@ -167,7 +150,6 @@ fun FacturaScreen(
         if (isLoading) {
             CircularProgressIndicator()
         }
-
     }
 }
 
@@ -177,13 +159,11 @@ fun FacturasList(
     facturaViewModel: FacturaViewModel,
     modifier: Modifier,
     onClick: () -> Unit,
-
     ) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 16.dp, start = 8.dp)
-
     ) {
 
         items(list) { factura ->
@@ -193,14 +173,13 @@ fun FacturasList(
                     .height(68.dp)
                     .padding(horizontal = 16.dp, vertical = 8.dp)
                     .clickable(onClick = onClick)
-
             ) {
                 Column(
                     horizontalAlignment = Alignment.Start,
                     verticalArrangement = Arrangement.Center,
                     modifier = Modifier
                         .padding(horizontal = 0.dp, vertical = 2.dp)
-                        .weight(1f) //ocupa el mayor ancho posible
+                        .weight(1f)
                         .fillMaxHeight()
                 )
                 {
@@ -209,7 +188,6 @@ fun FacturasList(
                         text = fechaFormatter.toString(),
                         color = Color.DarkGray
                     )
-
                     if (factura.descEstado == stringResource(R.string.pendientes)) {
                         Text(text = factura.descEstado,
                             color = Color.Red,
@@ -241,7 +219,6 @@ fun FacturasList(
             )
         }
     }
-
 }
 
 @Composable
@@ -279,7 +256,6 @@ fun FacturaDialog(
             }
         }
     )
-
 }
 
 
