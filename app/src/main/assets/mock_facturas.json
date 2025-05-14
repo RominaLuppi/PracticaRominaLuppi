@@ -4,7 +4,7 @@
     {
       "descEstado": "Anulada",
       "importeOrdenacion": 8.5600000000000001,
-      "fecha": "07/02/2021"
+      "fecha": "09/02/2021"
     },
     {
       "descEstado": "Cuota fija",
@@ -14,7 +14,7 @@
     {
       "descEstado": "Pendiente de pago",
       "importeOrdenacion": 1.5600000000000001,
-      "fecha": "07/02/2019"
+      "fecha": "24/02/2019"
     },
     {
       "descEstado": "Pagada",
@@ -28,7 +28,7 @@
     },
     {
       "descEstado": "Pendiente de pago",
-      "importeOrdenacion": 12.84,
+      "importeOrdenacion": 12.84000000000000,
       "fecha": "07/12/2018"
     },
     {
@@ -38,7 +38,7 @@
     },
     {
       "descEstado": "Pagada",
-      "importeOrdenacion": 18.27,
+      "importeOrdenacion": 18.27000000000000,
       "fecha": "05/10/2018"
     },
     {
@@ -48,7 +48,7 @@
     },
     {
       "descEstado": "Pagada",
-      "importeOrdenacion": 37.18,
+      "importeOrdenacion": 37.180000000000000,
       "fecha": "07/08/2018"
     }
   ]

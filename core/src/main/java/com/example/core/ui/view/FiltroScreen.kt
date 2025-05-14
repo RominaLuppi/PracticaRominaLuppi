@@ -470,7 +470,9 @@ fun DatePickerModal(
         disabledDayContentColor = Color.Gray,
         todayContentColor = Color.Black,
         selectedDayContainerColor = colorResource(R.color.screen_fact_color),
-        todayDateBorderColor = colorResource(R.color.screen_fact_color)
+        todayDateBorderColor = colorResource(R.color.screen_fact_color),
+        selectedYearContainerColor = colorResource(R.color.screen_fact_color),
+        currentYearContentColor = Color.Black
     )
 
     DatePickerDialog(
