@@ -76,17 +76,12 @@ dependencies {
     kapt (libs.hilt.android.compiler)
     implementation (libs.hilt.navigation.compose)
 
-    //Vico
-    implementation(libs.vico.compose)
-    implementation(libs.vico.compose.m3)
-
-
+    implementation ("io.github.ehsannarmani:compose-charts:0.1.7")
 
     testImplementation(libs.junit)
     testImplementation (libs.mockk)
     testImplementation (libs.androidx.core.testing)
     testImplementation (libs.kotlinx.coroutines.test)
-
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -9,6 +9,7 @@ androidxUi = "1.4.0"
 converterScalars = "2.9.0"
 core = "1.6.1"
 coreTestingVersion = "2.2.0"
+coreVersion = "2.1.2"
 foundation = "1.7.8"
 foundationVersion = "<version>"
 hiltAndroid = "2.50"
@@ -57,7 +58,7 @@ uiTooling = "<version>"
 uiToolingPreview = "1.7.8"
 uiToolingPreviewVersion = "<version>"
 uiVersion = "<version>"
-vico = "2.1.2"
+
 
 [libraries]
 accompanist-pager = { module = "com.google.accompanist:accompanist-pager", version.ref = "accompanistPager" }
@@ -69,6 +70,7 @@ androidx-foundation = { module = "androidx.compose.foundation:foundation", versi
 androidx-foundation-vversion = { module = "androidx.compose.foundation:foundation", version.ref = "foundationVersion" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 androidx-room-compiler-v271 = { module = "androidx.room:room-compiler", version.ref = "roomCompilerVersion" }
+core = { module = "com.patrykandpatrick.vico:core", version.ref = "coreVersion" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltVersion" }
 hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationVersion" }
 hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hiltVersion" }
@@ -131,9 +133,6 @@ ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
 ui-graphics = { module = "androidx.compose.ui:ui-graphics", version.ref = "uiGraphics" }
 ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "uiTooling" }
 ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "uiToolingPreview" }
-vico-compose = { group = "com.patrykandpatrick.vico", name = "compose", version.ref = "vico" }
-vico-compose-m3 = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vico" }
-
 
 
 [plugins]

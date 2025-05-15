@@ -41,7 +41,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -54,6 +56,15 @@ import com.example.core.R
 import com.example.core.ui.viewModel.FacturaViewModel
 import com.example.core.ui.viewModel.SharedViewModel
 import com.example.domain.Factura
+import com.google.android.material.transition.MaterialSharedAxis.Axis
+import ir.ehsannarmani.compose_charts.LineChart
+import ir.ehsannarmani.compose_charts.models.DotProperties
+import ir.ehsannarmani.compose_charts.models.DrawStyle
+import ir.ehsannarmani.compose_charts.models.GridProperties
+import ir.ehsannarmani.compose_charts.models.Line
+import ir.ehsannarmani.compose_charts.models.StrokeStyle
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,7 +84,8 @@ fun FacturaScreen(
     val isLoading by facturaViewModel.isLoading.observeAsState(false)
     val facturasFiltradas by sharedViewModel.facturasFiltradas.observeAsState(emptyList())
 
-    Scaffold(modifier = Modifier.background(Color.White),
+    Scaffold(
+        modifier = Modifier.background(Color.White),
         topBar = {
             TopAppBar(
                 title = {
@@ -123,6 +135,15 @@ fun FacturaScreen(
                 fontSize = 28.sp,
                 color = Color.Black
             )
+
+            Box(
+                modifier = Modifier
+                    .padding(start = 16.dp)
+                    .fillMaxWidth()
+            ) {
+                graficaLinearFacturas(facturas = facturaViewModel.factura.value ?: emptyList())
+            }
+
             FacturasList(
                 list = if (facturasFiltradas.isNotEmpty()) {
                     facturasFiltradas
@@ -159,7 +180,7 @@ fun FacturasList(
     facturaViewModel: FacturaViewModel,
     modifier: Modifier,
     onClick: () -> Unit,
-    ) {
+) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -170,7 +191,7 @@ fun FacturasList(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(68.dp)
+                    .height(54.dp)
                     .padding(horizontal = 16.dp, vertical = 8.dp)
                     .clickable(onClick = onClick)
             ) {
@@ -189,9 +210,11 @@ fun FacturasList(
                         color = Color.DarkGray
                     )
                     if (factura.descEstado == stringResource(R.string.pendientes)) {
-                        Text(text = factura.descEstado,
+                        Text(
+                            text = factura.descEstado,
                             color = Color.Red,
-                            fontSize = 14.sp)
+                            fontSize = 14.sp
+                        )
                     }
                 }
                 Row(
@@ -256,6 +279,69 @@ fun FacturaDialog(
             }
         }
     )
+}
+
+@Composable
+fun graficaLinearFacturas(facturas: List<Factura>) {
+
+    //se formatean las fechas y se ordenan
+    val dateInputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    val dateOutputFormat = SimpleDateFormat("MMM yyyy", Locale.getDefault())
+
+    val ejeX = facturas.map {
+        val date = dateInputFormat.parse(it.fecha)
+        dateOutputFormat.format(date ?: it.fecha)
+    }
+
+    val sortedFacturas = facturas.sortedBy { dateInputFormat.parse(it.fecha)?.time ?: 0L }
+    val valoresImporte = sortedFacturas.map { it.importeOrdenacion }
+
+    Column(
+        modifier = Modifier
+            .padding(16.dp)
+    ) {
+        LineChart(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .padding(horizontal = 16.dp),
+            data = remember {
+                listOf(
+                    Line(
+                        label = "€",
+                        values = valoresImporte,
+                        color = SolidColor(Color.Gray),
+                        drawStyle = DrawStyle.Stroke(
+                            strokeStyle = StrokeStyle.Dashed(intervals = floatArrayOf(10f, 10f), phase = 15f)),
+                        dotProperties = DotProperties(
+                            enabled = true,
+                            color = SolidColor(colorResource(R.color.screen_fact_color)),
+                            strokeWidth = 4.dp,
+                            radius = 7.dp,
+                            strokeColor = SolidColor(colorResource(R.color.screen_fact_color)),
+
+                            ),
+                    )
+                )
+            },
+            gridProperties = GridProperties.AxisProperties(),
+
+
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 22.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            ejeX.forEach { ejeX ->
+                Text(text = ejeX, fontSize = 10.sp)
+
+            }
+
+        }
+    }
+
 }
 
 

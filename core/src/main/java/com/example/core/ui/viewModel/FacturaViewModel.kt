@@ -1,6 +1,5 @@
 package com.example.core.ui.viewModel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,6 +14,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
+
 
 @HiltViewModel
 class FacturaViewModel @Inject constructor(
@@ -135,11 +135,8 @@ class FacturaViewModel @Inject constructor(
     }
 
      suspend fun clearAllDatabase(){
-//        viewModelScope.launch {
          facturasDao.deleteAllDatabase()
      }
-
-//        }
 
 
 }
