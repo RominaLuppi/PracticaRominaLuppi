@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,6 +22,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
+import androidx.compose.material.Switch
+import androidx.compose.material.SwitchColors
+import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
@@ -47,6 +51,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -92,6 +97,8 @@ fun FacturaScreen(
     val isLoading by facturaViewModel.isLoading.observeAsState(false)
     val facturasFiltradas by sharedViewModel.facturasFiltradas.observeAsState(emptyList())
 
+    var isGraficaLinear by remember { mutableStateOf(true) }
+
     Scaffold(
         modifier = Modifier.background(Color.White),
         topBar = {
@@ -136,7 +143,7 @@ fun FacturaScreen(
                 .padding(paddingScaffold) //para no tapar el TopAppBar
         ) {
             Text(
-                modifier = Modifier.padding(start = 16.dp),
+                modifier = Modifier.padding(start = 16.dp, bottom = 16.dp),
                 text = stringResource(R.string.title_factura),
                 fontFamily = FontFamily.Default,
                 fontWeight = FontWeight.Bold,
@@ -149,8 +156,19 @@ fun FacturaScreen(
                     .padding(start = 16.dp)
                     .fillMaxWidth()
             ) {
+
+                SwitchEuroKwh(
+                    isGraficaLinear = isGraficaLinear,
+                    onToggle = { isGraficaLinear = it })
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                if (isGraficaLinear)
                 GraficaLinearFacturas(facturas = facturaViewModel.factura.value ?: emptyList())
+                else GraficaBarrasFacturas()
             }
+
+            Spacer(modifier = Modifier.height(8.dp))
 
             FacturasList(
                 list = if (facturasFiltradas.isNotEmpty()) {
@@ -180,6 +198,7 @@ fun FacturaScreen(
             CircularProgressIndicator()
         }
     }
+
 }
 
 @Composable
@@ -320,7 +339,6 @@ fun GraficaLinearFacturas(facturas: List<Factura>) {
                     .fillMaxWidth()
                     .weight(1f)
             ) {
-                //switch
 
 
                 LineChart(
@@ -388,8 +406,8 @@ fun GraficaLinearFacturas(facturas: List<Factura>) {
                 .padding(top = 4.dp, start = 46.dp, end = 12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
 
-        ) {
-                ejeX.take(6).forEachIndexed { index, label ->
+            ) {
+            ejeX.take(6).forEachIndexed { index, label ->
                 Text(
 //                    text = if (index % 4 == 0) label else "",
                     text = label,
@@ -399,6 +417,40 @@ fun GraficaLinearFacturas(facturas: List<Factura>) {
                 )
             }
         }
+    }
+}
+@Composable
+fun GraficaBarrasFacturas() {
+    TODO("Not yet implemented")
+}
+
+@Composable
+fun SwitchEuroKwh(
+    isGraficaLinear: Boolean,
+    onToggle: (Boolean) -> Unit
+) {
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 16.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = "€", fontSize = 12.sp, modifier = Modifier)
+
+        Switch(
+            modifier = Modifier,
+            enabled = true,
+            onCheckedChange = { onToggle },
+            checked = !isGraficaLinear,
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = Color.White,
+                checkedTrackColor = colorResource(R.color.screen_fact_color),
+                uncheckedTrackColor = Color.LightGray
+            )
+        )
+        Text(text = "kWh", fontSize = 12.sp, modifier = Modifier)
     }
 }
 
