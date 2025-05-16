@@ -1,6 +1,7 @@
 package com.example.core.ui.view
 
 
+import android.R.attr.visible
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -27,6 +29,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -49,6 +52,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -58,11 +62,15 @@ import com.example.core.ui.viewModel.SharedViewModel
 import com.example.domain.Factura
 import com.google.android.material.transition.MaterialSharedAxis.Axis
 import ir.ehsannarmani.compose_charts.LineChart
+import ir.ehsannarmani.compose_charts.models.DividerProperties
 import ir.ehsannarmani.compose_charts.models.DotProperties
 import ir.ehsannarmani.compose_charts.models.DrawStyle
 import ir.ehsannarmani.compose_charts.models.GridProperties
+import ir.ehsannarmani.compose_charts.models.GridProperties.AxisProperties
 import ir.ehsannarmani.compose_charts.models.Line
+import ir.ehsannarmani.compose_charts.models.LineProperties
 import ir.ehsannarmani.compose_charts.models.StrokeStyle
+import ir.ehsannarmani.compose_charts.models.ViewRange
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -114,7 +122,7 @@ fun FacturaScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = onFilterClick) {
+                    IconButton(onClick = onFilterClick, modifier = Modifier.padding(end = 6.dp)) {
                         Icon(
                             painter = painterResource(R.drawable.filtericon),
                             contentDescription = stringResource(R.string.filter_description)
@@ -141,7 +149,7 @@ fun FacturaScreen(
                     .padding(start = 16.dp)
                     .fillMaxWidth()
             ) {
-                graficaLinearFacturas(facturas = facturaViewModel.factura.value ?: emptyList())
+                GraficaLinearFacturas(facturas = facturaViewModel.factura.value ?: emptyList())
             }
 
             FacturasList(
@@ -191,8 +199,8 @@ fun FacturasList(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(54.dp)
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .height(68.dp)
+                    .padding(horizontal = 16.dp, vertical = 10.dp)
                     .clickable(onClick = onClick)
             ) {
                 Column(
@@ -213,7 +221,7 @@ fun FacturasList(
                         Text(
                             text = factura.descEstado,
                             color = Color.Red,
-                            fontSize = 14.sp
+                            fontSize = 13.sp
                         )
                     }
                 }
@@ -282,67 +290,122 @@ fun FacturaDialog(
 }
 
 @Composable
-fun graficaLinearFacturas(facturas: List<Factura>) {
+fun GraficaLinearFacturas(facturas: List<Factura>) {
 
     //se formatean las fechas y se ordenan
     val dateInputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-    val dateOutputFormat = SimpleDateFormat("MMM yyyy", Locale.getDefault())
+    val dateOutputFormat = SimpleDateFormat("MMM yy", Locale.getDefault())
 
-    val ejeX = facturas.map {
+    val sortedFacturas = facturas.sortedBy { dateInputFormat.parse(it.fecha)?.time ?: 0L }
+
+    val ejeX = sortedFacturas.map {
         val date = dateInputFormat.parse(it.fecha)
         dateOutputFormat.format(date ?: it.fecha)
     }
+    val ejeY = sortedFacturas.map { it.importeOrdenacion }
+    val color = colorResource(R.color.screen_fact_color)
 
-    val sortedFacturas = facturas.sortedBy { dateInputFormat.parse(it.fecha)?.time ?: 0L }
-    val valoresImporte = sortedFacturas.map { it.importeOrdenacion }
+    // Configuración para valores del eje Y sobre lineas divider
+    val minY: Double = ejeY.minOrNull() ?: 0.0
+    val maxY: Double = ejeY.maxOrNull() ?: 0.0
+    val steps = 3
+    val stepValue = (maxY - minY) / ((steps - 1).coerceAtLeast(1).toDouble())
 
-    Column(
-        modifier = Modifier
-            .padding(16.dp)
-    ) {
-        LineChart(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .padding(horizontal = 16.dp),
-            data = remember {
-                listOf(
-                    Line(
-                        label = "€",
-                        values = valoresImporte,
-                        color = SolidColor(Color.Gray),
-                        drawStyle = DrawStyle.Stroke(
-                            strokeStyle = StrokeStyle.Dashed(intervals = floatArrayOf(10f, 10f), phase = 15f)),
-                        dotProperties = DotProperties(
-                            enabled = true,
-                            color = SolidColor(colorResource(R.color.screen_fact_color)),
-                            strokeWidth = 4.dp,
-                            radius = 7.dp,
-                            strokeColor = SolidColor(colorResource(R.color.screen_fact_color)),
+    val yLabels = List(steps) { i -> String.format("%.0f €", maxY - i * stepValue) }
 
+    Column(modifier = Modifier.padding(horizontal = 14.dp)) {
+        Row(modifier = Modifier.height(200.dp)) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            ) {
+                //switch
+
+
+                LineChart(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(end = 12.dp),
+                    data = remember {
+                        listOf(
+                            Line(
+                                label = "",
+                                values = ejeY,
+                                color = SolidColor(color),
+                                dotProperties = DotProperties(
+                                    enabled = true,
+                                    color = SolidColor(color),
+                                    radius = 2.dp,
+                                    strokeColor = SolidColor(color),
+                                ),
+                                curvedEdges = false,
+                                gradientAnimationDelay = 500
                             ),
+                        )
+                    },
+                    gridProperties = GridProperties(
+                        xAxisProperties = AxisProperties(
+                            color = SolidColor(Color.LightGray),
+                            thickness = 1.dp,
+                            enabled = true,
+                            lineCount = steps,
+                        ),
+                        yAxisProperties = AxisProperties(enabled = false)
+                    ),
+                    dividerProperties = DividerProperties(
+                        xAxisProperties = LineProperties(
+                            color = SolidColor(Color.LightGray),
+                            thickness = 1.dp,
+                            enabled = true
+                        ),
                     )
                 )
-            },
-            gridProperties = GridProperties.AxisProperties(),
-
-
-        )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 22.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            ejeX.forEach { ejeX ->
-                Text(text = ejeX, fontSize = 10.sp)
-
+            }
+            // valores del ejeY
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(end = 20.dp, top = 14.dp),
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.End
+            ) {
+                yLabels.forEach { label ->
+                    Text(
+                        text = label,
+                        fontSize = 12.sp,
+                        color = Color.Gray,
+                        textAlign = TextAlign.End
+                    )
+                }
             }
 
         }
-    }
+        // valores ejeX
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 4.dp, start = 46.dp, end = 12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
 
+        ) {
+                ejeX.take(6).forEachIndexed { index, label ->
+                Text(
+//                    text = if (index % 4 == 0) label else "",
+                    text = label,
+                    fontSize = 10.sp,
+                    textAlign = TextAlign.Center,
+                    maxLines = 1
+                )
+            }
+        }
+    }
 }
+
+
+
+
+
 
 
 
