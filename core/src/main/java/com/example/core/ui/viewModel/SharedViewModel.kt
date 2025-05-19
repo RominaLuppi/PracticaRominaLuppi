@@ -22,7 +22,7 @@ class SharedViewModel @Inject constructor(
     val _errorMsg = MutableLiveData<String>()
     val errorMsg: LiveData<String> = _errorMsg
 
-    private val _filtroState = MutableLiveData(FacturaFiltroState("", "", 0.0, 0.0, emptyList()))
+    private val _filtroState = MutableLiveData(FacturaFiltroState("", "", 0.0, 0.0, emptyList(), 0.0))
     val filtroState: LiveData<FacturaFiltroState> = _filtroState
 
     //cuando se cambian los fltros, se actualiza e estado y se realiza el filtrado

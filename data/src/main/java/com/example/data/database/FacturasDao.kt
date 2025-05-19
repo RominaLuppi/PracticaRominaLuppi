@@ -22,7 +22,8 @@ interface FacturasDao {
         SELECT * FROM facturas_table
         WHERE fecha_db >= :fechaDesde AND fecha_db <= :fechaHasta
         AND importeOrdenacion_db >= :importeMin AND importeOrdenacion_db <= :importeMax
-        AND descEstado_db IN (:estado)        
+        AND descEstado_db IN (:estado) 
+        AND kwh_db IN (:kwh)       
     """)
 
     suspend fun getFacturasFiltradas(
@@ -30,7 +31,8 @@ interface FacturasDao {
         fechaHasta: String,
         importeMin: Double,
         importeMax: Double,
-        estado: List<String>
+        estado: List<String>,
+        kwh: Double
     ): List<FacturaEntity>
 
     //para borrar la base de datos

@@ -4,52 +4,62 @@
     {
       "descEstado": "Anulada",
       "importeOrdenacion": 8.5600000000000001,
-      "fecha": "09/02/2021"
+      "fecha": "09/02/2021",
+      "kwh": 340.00
     },
     {
       "descEstado": "Cuota fija",
       "importeOrdenacion": 10.5600000000000001,
-      "fecha": "07/02/2021"
+      "fecha": "07/02/2021",
+      "kwh": 540.00
     },
     {
       "descEstado": "Pendiente de pago",
       "importeOrdenacion": 1.5600000000000001,
-      "fecha": "24/02/2019"
+      "fecha": "24/02/2019",
+      "kwh": 48.00
     },
     {
       "descEstado": "Pagada",
       "importeOrdenacion": 25.140000000000001,
-      "fecha": "05/02/2019"
+      "fecha": "05/02/2019",
+      "kwh": 140.00
     },
     {
       "descEstado": "Pagada",
       "importeOrdenacion": 22.690000000000001,
-      "fecha": "08/01/2019"
+      "fecha": "08/01/2019",
+      "kwh": 230.00
     },
     {
       "descEstado": "Pendiente de pago",
       "importeOrdenacion": 12.84000000000000,
-      "fecha": "07/12/2018"
+      "fecha": "07/12/2018",
+      "kwh": 80.00
     },
     {
       "descEstado": "Pagada",
       "importeOrdenacion": 35.159999999999997,
-      "fecha": "16/11/2018"
+      "fecha": "16/11/2018",
+      "kwh": 160.00
     },
     {
       "descEstado": "Pagada",
       "importeOrdenacion": 18.27000000000000,
-      "fecha": "05/10/2018"
+      "fecha": "05/10/2018",
+      "kwh": 340.00
     },
     {
       "descEstado": "Pendiente de pago",
       "importeOrdenacion": 61.170000000000002,
-      "fecha": "05/09/2018"
+      "fecha": "05/09/2018",
+      "kwh": 348.00
     },
     {
       "descEstado": "Pagada",
       "importeOrdenacion": 37.180000000000000,
-      "fecha": "07/08/2018"
+      "fecha": "07/08/2018",
+      "kwh": 125.00
     }
   ]
 

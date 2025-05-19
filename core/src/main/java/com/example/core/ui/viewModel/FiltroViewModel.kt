@@ -129,7 +129,8 @@ class FiltroViewModel: ViewModel() {
             fechaHasta = fechaHastaState,
             importeMin = 0.0,
             importeMax = sliderPosition.toDouble(),
-            estado = estadosSeleccionados
+            estado = estadosSeleccionados,
+            kwh = 0.0
         )
     }
 }

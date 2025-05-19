@@ -6,4 +6,6 @@
     <color name="icon_info_color">#5BADEF</color>
 
     <color name="debug_icon_color">#C2CCB6</color>
+
+    <color name="linear_color">#B0C894</color>
 </resources>

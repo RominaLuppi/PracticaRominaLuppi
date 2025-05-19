@@ -4,7 +4,8 @@ data class Factura(
 
     val descEstado: String,
     val importeOrdenacion: Double,
-    val fecha: String
+    val fecha: String,
+    val kwh: Double
 
 )
 

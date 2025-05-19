@@ -1,7 +1,6 @@
 package com.example.core.ui.view
 
 
-import android.R.attr.visible
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,8 +12,8 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,7 +22,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Switch
-import androidx.compose.material.SwitchColors
 import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -33,7 +31,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -48,10 +45,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -65,17 +60,18 @@ import com.example.core.R
 import com.example.core.ui.viewModel.FacturaViewModel
 import com.example.core.ui.viewModel.SharedViewModel
 import com.example.domain.Factura
-import com.google.android.material.transition.MaterialSharedAxis.Axis
+import ir.ehsannarmani.compose_charts.ColumnChart
 import ir.ehsannarmani.compose_charts.LineChart
+import ir.ehsannarmani.compose_charts.models.BarProperties
+import ir.ehsannarmani.compose_charts.models.Bars
 import ir.ehsannarmani.compose_charts.models.DividerProperties
 import ir.ehsannarmani.compose_charts.models.DotProperties
 import ir.ehsannarmani.compose_charts.models.DrawStyle
 import ir.ehsannarmani.compose_charts.models.GridProperties
 import ir.ehsannarmani.compose_charts.models.GridProperties.AxisProperties
+import ir.ehsannarmani.compose_charts.models.LabelProperties
 import ir.ehsannarmani.compose_charts.models.Line
 import ir.ehsannarmani.compose_charts.models.LineProperties
-import ir.ehsannarmani.compose_charts.models.StrokeStyle
-import ir.ehsannarmani.compose_charts.models.ViewRange
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -97,7 +93,7 @@ fun FacturaScreen(
     val isLoading by facturaViewModel.isLoading.observeAsState(false)
     val facturasFiltradas by sharedViewModel.facturasFiltradas.observeAsState(emptyList())
 
-    var isGraficaLinear by remember { mutableStateOf(true) }
+    var isEuroMode by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier.background(Color.White),
@@ -124,7 +120,6 @@ fun FacturaScreen(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "back",
                             tint = colorResource(R.color.screen_fact_color)
-
                         )
                     }
                 },
@@ -150,23 +145,21 @@ fun FacturaScreen(
                 fontSize = 28.sp,
                 color = Color.Black
             )
-
             Box(
                 modifier = Modifier
-                    .padding(start = 16.dp)
+                    .padding(start = 16.dp, end = 16.dp)
                     .fillMaxWidth()
             ) {
-
-                SwitchEuroKwh(
-                    isGraficaLinear = isGraficaLinear,
-                    onToggle = { isGraficaLinear = it })
+                SwitchEuroKwh(isEuroMode = isEuroMode, onModeChange = { isEuroMode = it })
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                if (isGraficaLinear)
-                GraficaLinearFacturas(facturas = facturaViewModel.factura.value ?: emptyList())
-                else GraficaBarrasFacturas()
+                if (!isEuroMode) GraficaLinearFacturas(
+                    facturas = facturaViewModel.factura.value ?: emptyList()
+                )
+                else GraficaBarrasFacturas(facturas = facturaViewModel.factura.value ?: emptyList())
             }
+
 
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -185,12 +178,10 @@ fun FacturaScreen(
             )
         }
     }
-    //mostrar el dialogo cuando se hace click en una factura
+    //muestra el dialog cuando se hace clic en una factura
     if (showDialog) {
         FacturaDialog(
-            onDismiss = {
-                showDialog = false
-            }
+            onDismiss = { showDialog = false }
         )
     }
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -198,7 +189,6 @@ fun FacturaScreen(
             CircularProgressIndicator()
         }
     }
-
 }
 
 @Composable
@@ -317,12 +307,13 @@ fun GraficaLinearFacturas(facturas: List<Factura>) {
 
     val sortedFacturas = facturas.sortedBy { dateInputFormat.parse(it.fecha)?.time ?: 0L }
 
-    val ejeX = sortedFacturas.map {
-        val date = dateInputFormat.parse(it.fecha)
-        dateOutputFormat.format(date ?: it.fecha)
+    val ejeX = sortedFacturas.map {factura ->
+        val date = dateInputFormat.parse(factura.fecha)
+        dateOutputFormat.format(date ?: factura.fecha)
     }
     val ejeY = sortedFacturas.map { it.importeOrdenacion }
     val color = colorResource(R.color.screen_fact_color)
+    val colorFill = colorResource(R.color.linear_color)
 
     // Configuración para valores del eje Y sobre lineas divider
     val minY: Double = ejeY.minOrNull() ?: 0.0
@@ -339,18 +330,18 @@ fun GraficaLinearFacturas(facturas: List<Factura>) {
                     .fillMaxWidth()
                     .weight(1f)
             ) {
-
-
                 LineChart(
+                    labelProperties = LabelProperties(enabled = false),
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(end = 12.dp),
-                    data = remember {
+                    data =
                         listOf(
                             Line(
-                                label = "",
+                                label = "€/mes",
                                 values = ejeY,
                                 color = SolidColor(color),
+                                firstGradientFillColor = colorFill,
                                 dotProperties = DotProperties(
                                     enabled = true,
                                     color = SolidColor(color),
@@ -358,10 +349,9 @@ fun GraficaLinearFacturas(facturas: List<Factura>) {
                                     strokeColor = SolidColor(color),
                                 ),
                                 curvedEdges = false,
-                                gradientAnimationDelay = 500
+                                gradientAnimationDelay = 400
                             ),
-                        )
-                    },
+                        ),
                     gridProperties = GridProperties(
                         xAxisProperties = AxisProperties(
                             color = SolidColor(Color.LightGray),
@@ -409,7 +399,6 @@ fun GraficaLinearFacturas(facturas: List<Factura>) {
             ) {
             ejeX.take(6).forEachIndexed { index, label ->
                 Text(
-//                    text = if (index % 4 == 0) label else "",
                     text = label,
                     fontSize = 10.sp,
                     textAlign = TextAlign.Center,
@@ -419,39 +408,85 @@ fun GraficaLinearFacturas(facturas: List<Factura>) {
         }
     }
 }
+
 @Composable
-fun GraficaBarrasFacturas() {
-    TODO("Not yet implemented")
+fun GraficaBarrasFacturas(facturas: List<Factura>) {
+    //se formatean las fechas y se ordenan
+    val dateInputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    val dateOutputFormat = SimpleDateFormat("MMM yy", Locale.getDefault())
+    val sortedFacturas = facturas.sortedBy { dateInputFormat.parse(it.fecha)?.time ?: 0L }
+
+    val color = colorResource(R.color.screen_fact_color)
+
+    val ejeX = sortedFacturas.map { factura ->
+        val date = dateInputFormat.parse(factura.fecha)
+        val mesFormat = date?.let { dateOutputFormat.format(it) } ?: "fecha inválida"
+
+
+            Bars(
+            label = mesFormat.toString(),
+            values = listOf(
+                Bars.Data(
+                    value = factura.kwh,
+                    color = SolidColor(color)
+                )
+            )
+        )
+    }
+    val showEjeX = ejeX.take(5)
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+
+    ) {
+        ColumnChart(
+            modifier = Modifier.heightIn(min = 150.dp, max = 250.dp)
+                .padding(end = 20.dp, top = 14.dp),
+            data = showEjeX,
+            barProperties = BarProperties(
+                spacing = 8.dp,
+                thickness = 20.dp,
+                style = DrawStyle.Fill
+            ),
+            gridProperties = GridProperties(
+                xAxisProperties = AxisProperties(
+                    color = SolidColor(Color.LightGray),
+                    thickness = 1.dp,
+                    enabled = true,
+                ),
+                yAxisProperties = AxisProperties(enabled = false)
+            ),
+        )
+    }
+
 }
 
 @Composable
-fun SwitchEuroKwh(
-    isGraficaLinear: Boolean,
-    onToggle: (Boolean) -> Unit
-) {
+fun SwitchEuroKwh(isEuroMode: Boolean, onModeChange: (Boolean) -> Unit)
+{
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = "€", fontSize = 12.sp, modifier = Modifier)
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 16.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(text = "€", fontSize = 12.sp, modifier = Modifier)
-
-        Switch(
-            modifier = Modifier,
-            enabled = true,
-            onCheckedChange = { onToggle },
-            checked = !isGraficaLinear,
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = Color.White,
-                checkedTrackColor = colorResource(R.color.screen_fact_color),
-                uncheckedTrackColor = Color.LightGray
+            Switch(
+                modifier = Modifier,
+                enabled = true,
+                checked = isEuroMode,
+                onCheckedChange = { onModeChange (it) },
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = Color.White,
+                    checkedTrackColor = colorResource(R.color.screen_fact_color),
+                    uncheckedTrackColor = Color.LightGray
+                )
             )
-        )
-        Text(text = "kWh", fontSize = 12.sp, modifier = Modifier)
+            Text(text = "kWh", fontSize = 12.sp, modifier = Modifier)
     }
+
 }
 
 

@@ -53,7 +53,8 @@ class FacturaRepositoryImpl @Inject constructor(
             fechaHasta = filtro.fechaHasta,
             importeMin = filtro.importeMin,
             importeMax = filtro.importeMax,
-            estado = filtro.estado
+            estado = filtro.estado,
+            kwh = filtro.kwh
         )
         if (factutasFromDb.isNotEmpty()) {
             return factutasFromDb.map { it.toDomain() }
@@ -64,7 +65,8 @@ class FacturaRepositoryImpl @Inject constructor(
                 fechaHasta = filtro.fechaHasta,
                 importeMin = filtro.importeMin,
                 importeMax = filtro.importeMax,
-                estado = filtro.estado
+                estado = filtro.estado,
+                kwh = filtro.kwh
             )
             val facturaEntityList = facturaFromApi.facturas.map { it.toEntity() }
             facturasDao.insertAll(facturaEntityList)

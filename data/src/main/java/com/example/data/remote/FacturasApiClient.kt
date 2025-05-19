@@ -14,9 +14,6 @@ interface FacturasApiClient {
    @GET("facturas")
    suspend fun getAllFacturas(): FacturaResponse
 
-//   @GET("facturas")
-//
-//   suspend fun getAllFacturas(): FacturaResponse
 
    @GET("facturas")
    suspend fun getFacturasFiltradas(
@@ -24,13 +21,8 @@ interface FacturasApiClient {
       @Query("fechaHasta") fechaHasta: String,
       @Query("importeMin") importeMin: Double,
       @Query("importeMax") importeMax: Double,
-      @Query("estado") estado: List<String>
+      @Query("estado") estado: List<String>,
+      @Query("kwh") kwh: Double
    ): FacturaResponse
-
-//   @Mock
-//   @MockResponse(body = "mock_facturas.json")
-//   @GET("facturas")
-//   suspend fun getMockFacturas(): FacturaResponse
-
 
 }

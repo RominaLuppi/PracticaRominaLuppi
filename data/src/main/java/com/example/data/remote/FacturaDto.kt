@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName
 data class FacturaDto(
         @SerializedName("descEstado") val descEstado: String,
         @SerializedName("importeOrdenacion") val importeOrdenacion: Double,
-        @SerializedName("fecha") val fecha: String
-    )
+        @SerializedName("fecha") val fecha: String,
+        @SerializedName("kwh") val kwh: Double
+)
 

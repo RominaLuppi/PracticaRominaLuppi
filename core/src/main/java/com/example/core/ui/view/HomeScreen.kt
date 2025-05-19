@@ -144,7 +144,7 @@ fun HomeScreen(
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(54.dp))
+            Spacer(modifier = Modifier.height(28.dp))
             Image(
                 painter = painterResource(R.drawable.iberdrola_logo),
                 contentDescription = stringResource(R.string.logo_iberdrola),
@@ -154,16 +154,15 @@ fun HomeScreen(
                 contentScale = ContentScale.Crop,
                 alignment = Alignment.Center
             )
-            Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.height(36.dp))
 
-            Row(
+            Column (
                 modifier = Modifier.padding(18.dp),
-                horizontalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.Center
             )
             {
                 Button(
-                    modifier = Modifier.width(150.dp),
-
+                    modifier = Modifier.width(350.dp),
                     onClick = {
                         navController.navigate("FacturaScreen")
                     },
@@ -172,13 +171,13 @@ fun HomeScreen(
                     Text(
                         text = stringResource(R.string.btn_home_facturas),
                         color = Color.White,
-                        fontSize = 16.sp
+                        fontSize = 20.sp
                     )
                 }
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
                 Button(
-                    modifier = Modifier.width(150.dp),
+                    modifier = Modifier.width(350.dp),
                     onClick = {
                         navController.navigate("SmartSolarScreen")
                     },
@@ -187,7 +186,7 @@ fun HomeScreen(
                     Text(
                         text = stringResource(R.string.btn_home_smart_solar),
                         color = Color.White,
-                        fontSize = 16.sp
+                        fontSize = 20.sp
                     )
                 }
             }

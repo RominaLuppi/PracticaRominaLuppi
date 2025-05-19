@@ -93,7 +93,7 @@ class FacturaViewModel @Inject constructor(
             //filtro por fecha desde
             if (filtro.fechaDesde.isNotEmpty() && fechaFactura != null) {
                 val fechaDesde = formatoFecha.parse(filtro.fechaDesde)
-//                val fechaFactura = formatoFecha.parse(factura.fecha)
+
                 if (fechaFactura.before(fechaDesde) == true) {
                     esValido = false
                 }
@@ -102,7 +102,7 @@ class FacturaViewModel @Inject constructor(
             //filtro por fecha hasta
             if (filtro.fechaHasta.isNotEmpty() && fechaFactura != null) {
                 val fechaHasta = formatoFecha.parse(filtro.fechaHasta)
-//                val fechaFactura = formatoFecha.parse(factura.fecha)
+
                 if (fechaFactura.after(fechaHasta) == true) {
                     esValido = false
                 }
