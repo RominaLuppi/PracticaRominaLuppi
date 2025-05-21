@@ -56,7 +56,6 @@ import androidx.navigation.NavHostController
 import com.example.core.R
 import com.example.core.ui.viewModel.FacturaViewModel
 import com.example.core.ui.viewModel.FiltroViewModel
-import com.example.core.ui.viewModel.SharedViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -67,8 +66,6 @@ import java.util.Locale
 fun FiltrosScreen(
     filtroViewModel: FiltroViewModel,
     facturaViewModel: FacturaViewModel,
-    sharedViewModel: SharedViewModel,
-    modifier: Modifier = Modifier,
     navController: NavHostController
 ) {
     Scaffold(
@@ -184,7 +181,6 @@ fun AplicarFiltros(
     facturaViewModel: FacturaViewModel,
     navController: NavHostController
 ) {
-
     var showDialog by remember { mutableStateOf(false) }
     val facturasOrig by facturaViewModel.factura.observeAsState()
 
@@ -197,11 +193,9 @@ fun AplicarFiltros(
             filtroViewModel.limpiarMsgError()
         }
     }
-
     if (showDialog) {
         ShowDialog(onDismiss = { showDialog = false })
     }
-
     Button(
         modifier = Modifier
             .width(250.dp)
@@ -210,14 +204,18 @@ fun AplicarFiltros(
             //comprobar validez de las fechas
             val fechaDesde = filtroViewModel.fechaDesde
             val fechaHasta = filtroViewModel.fechaHasta
+            var errorMostrado = false
 
             if (fechaDesde != null && fechaHasta != null && fechaDesde > fechaHasta) {
                 filtroViewModel.mostrarMsgError("El rango de fechas no es válido")
+                errorMostrado = true
                 return@Button
+            } else {
+                errorMostrado = false
             }
 
             //se construye el filtro
-            val filtroActual = filtroViewModel.ConstruirFiltroState()
+            val filtroActual = filtroViewModel.construirFiltroState()
 
             //se actualiza el filtro en el viewModel
             filtroViewModel.actualizarFiltro(filtroActual)
@@ -296,7 +294,7 @@ fun EliminarFiltros(viewModel: FiltroViewModel) {
     Button(
         modifier = Modifier.width(250.dp),
         onClick = {
-            viewModel.ResetarFiltros()
+            viewModel.resetarFiltros()
         },
         colors = ButtonDefaults.buttonColors(Color.Gray)
     ) {
@@ -340,7 +338,7 @@ fun SeleccionarEstado(viewModel: FiltroViewModel) {
                 Checkbox(
                     checked = isChecked,
                     onCheckedChange = {
-                        viewModel.SelectorEstado(index, it)
+                        viewModel.selectorEstado(index, it)
                     },
                     colors = androidx.compose.material.CheckboxDefaults.colors(
                         checkedColor = colorResource(R.color.screen_fact_color),
@@ -352,11 +350,11 @@ fun SeleccionarEstado(viewModel: FiltroViewModel) {
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
                         .clickable {
-                            viewModel.SelectorEstado(
+                            viewModel.selectorEstado(
                                 index,
                                 !isChecked
                             )
-                        } //para hacer tambien el texto clickeable
+                        }
                 )
             }
         }
@@ -377,8 +375,7 @@ fun CalendFechaDesde(viewModel: FiltroViewModel) {
             viewModel.limpiarMsgErrorFechaDesde()
         }
     }
-    val formattedDate = selectedDate?.let {
-        it
+    val formattedDate = selectedDate?.let {it
         val date = Date(it)
         SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(date)
     } ?: stringResource(R.string.btn_fecha)
@@ -397,7 +394,7 @@ fun CalendFechaDesde(viewModel: FiltroViewModel) {
     if (showDate) {
         DatePickerModal(
             onDateSelected = {
-                viewModel.ActualizarFechaDesde(it)
+                viewModel.actualizarFechaDesde(it)
             },
             onDismiss = { showDate = false },
             title = {
@@ -444,7 +441,7 @@ fun CalendFechaHasta(
     if (showDate) {
         DatePickerModal(
             onDateSelected = {
-                viewModel.ActualizarFechaHasta(it)
+                viewModel.actualizarFechaHasta(it)
             },
             onDismiss = { showDate = false },
             title = {
@@ -547,7 +544,7 @@ fun SeleccionarImporte(
         Slider(
             value = sliderPosition,
             onValueChange = { range ->
-                filtroViewModel.SelectorImporte(range.toInt().toFloat())
+                filtroViewModel.selectorImporte(range.toInt().toFloat())
             },
             valueRange = 0f..impMax,
             colors = SliderDefaults.colors(

@@ -24,7 +24,7 @@ class FiltroViewModelTest {
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
         }.timeInMillis
-        viewModel.ActualizarFechaDesde(fecha)
+        viewModel.actualizarFechaDesde(fecha)
         assertEquals(fecha, viewModel.fechaDesde)
         assertNull(viewModel._errorMsgDesde.value)
     }
@@ -38,7 +38,7 @@ class FiltroViewModelTest {
             set(Calendar.MILLISECOND, 0)
             add(Calendar.DAY_OF_YEAR, 1)
         }.timeInMillis
-        viewModel.ActualizarFechaDesde(fecha)
+        viewModel.actualizarFechaDesde(fecha)
         assertNull(viewModel.fechaDesde)
         assertEquals("Debe seleccionar una fecha válida", viewModel._errorMsgDesde.value)
     }
@@ -51,7 +51,7 @@ class FiltroViewModelTest {
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
         }.timeInMillis
-        viewModel.ActualizarFechaHasta(fecha)
+        viewModel.actualizarFechaHasta(fecha)
         assertEquals(fecha, viewModel.fechaHasta)
         assertNull(viewModel._errorMsgHasta.value)
     }
@@ -65,7 +65,7 @@ class FiltroViewModelTest {
             set(Calendar.MILLISECOND, 0)
             add(Calendar.DAY_OF_YEAR, 1)
         }.timeInMillis
-        viewModel.ActualizarFechaHasta(fecha)
+        viewModel.actualizarFechaHasta(fecha)
         assertNull(viewModel.fechaHasta)
         assertEquals("Debe seleccionar una fecha válida", viewModel._errorMsgHasta.value)
     }
@@ -73,7 +73,7 @@ class FiltroViewModelTest {
     @Test
     fun `test SelectorImporte`() {
         val valor = 10.0f
-        viewModel.SelectorImporte(valor)
+        viewModel.selectorImporte(valor)
         assertEquals(valor, viewModel.sliderPosition)
     }
 
@@ -81,7 +81,7 @@ class FiltroViewModelTest {
     fun `test SelectorEstado`() {
         val index = 0
         val valor = true
-        viewModel.SelectorEstado(index, valor)
+        viewModel.selectorEstado(index, valor)
         assertEquals(valor, viewModel.checkedState[index])
     }
 
@@ -91,7 +91,7 @@ class FiltroViewModelTest {
         viewModel.fechaHasta = Calendar.getInstance().timeInMillis
         viewModel.sliderPosition = 10.0f
         viewModel.checkedState = listOf(true, false, true, false, true)
-        viewModel.ResetarFiltros()
+        viewModel.resetarFiltros()
         assertNull(viewModel.fechaDesde)
         assertNull(viewModel.fechaHasta)
         assertEquals(0.0f, viewModel.sliderPosition)
@@ -116,7 +116,7 @@ class FiltroViewModelTest {
         viewModel.fechaHasta = fechaHasta
         viewModel.sliderPosition = 10.0f
         viewModel.checkedState = listOf(true, false, true, false, true)
-        val filtroState = viewModel.ConstruirFiltroState()
+        val filtroState = viewModel.construirFiltroState()
         val formatoFecha = java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault())
         assertEquals(formatoFecha.format(fechaDesde), filtroState.fechaDesde)
         assertEquals(formatoFecha.format(fechaHasta), filtroState.fechaHasta)

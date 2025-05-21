@@ -1,11 +1,9 @@
 package com.example.practicarominaluppi
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -18,11 +16,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.core.ui.view.FacturaScreen
-import com.example.core.ui.viewModel.FacturaViewModel
-import com.example.core.ui.viewModel.FiltroViewModel
 import com.example.core.ui.view.FiltrosScreen
 import com.example.core.ui.view.HomeScreen
 import com.example.core.ui.view.SmartSolarScreen
+import com.example.core.ui.viewModel.FacturaViewModel
+import com.example.core.ui.viewModel.FiltroViewModel
 import com.example.core.ui.viewModel.SharedViewModel
 import com.example.core.ui.viewModel.SmartSolarViewModel
 import com.example.practicarominaluppi.ui.theme.PracticaRominaLuppiTheme
@@ -74,11 +72,10 @@ fun MainNavigation() {
                 val parentEntry = remember(backStackEntry){
                     navController.getBackStackEntry("FacturaScreen")
                 }
-                val sharedViewModel: SharedViewModel = hiltViewModel(parentEntry)
+
                 FiltrosScreen(
                     filtroViewModel = filtroViewModel,
                     facturaViewModel = facturaViewModel,
-                    sharedViewModel = sharedViewModel,
                     navController = navController
                 )
             }

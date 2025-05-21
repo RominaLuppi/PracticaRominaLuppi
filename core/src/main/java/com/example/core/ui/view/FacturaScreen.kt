@@ -160,7 +160,6 @@ fun FacturaScreen(
                 else GraficaBarrasFacturas(facturas = facturaViewModel.factura.value ?: emptyList())
             }
 
-
             Spacer(modifier = Modifier.height(8.dp))
 
             FacturasList(
@@ -302,16 +301,10 @@ fun FacturaDialog(
 fun GraficaLinearFacturas(facturas: List<Factura>) {
 
     //se formatean las fechas y se ordenan
-    val dateInputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-    val dateOutputFormat = SimpleDateFormat("MMM yy", Locale.getDefault())
-
-    val sortedFacturas = facturas.sortedBy { dateInputFormat.parse(it.fecha)?.time ?: 0L }
-
-    val ejeX = sortedFacturas.map {factura ->
-        val date = dateInputFormat.parse(factura.fecha)
-        dateOutputFormat.format(date ?: factura.fecha)
-    }
+    val sortedFacturas = ordenarFacturasPorFecha(facturas)
+    val ejeX = sortedFacturas.map { formatearFechaFacturas(it) }
     val ejeY = sortedFacturas.map { it.importeOrdenacion }
+
     val color = colorResource(R.color.screen_fact_color)
     val colorFill = colorResource(R.color.linear_color)
 
@@ -387,7 +380,6 @@ fun GraficaLinearFacturas(facturas: List<Factura>) {
                     )
                 }
             }
-
         }
         // valores ejeX
         Row(
@@ -411,20 +403,12 @@ fun GraficaLinearFacturas(facturas: List<Factura>) {
 
 @Composable
 fun GraficaBarrasFacturas(facturas: List<Factura>) {
-    //se formatean las fechas y se ordenan
-    val dateInputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-    val dateOutputFormat = SimpleDateFormat("MMM yy", Locale.getDefault())
-    val sortedFacturas = facturas.sortedBy { dateInputFormat.parse(it.fecha)?.time ?: 0L }
-
     val color = colorResource(R.color.screen_fact_color)
-
-    val ejeX = sortedFacturas.map { factura ->
-        val date = dateInputFormat.parse(factura.fecha)
-        val mesFormat = date?.let { dateOutputFormat.format(it) } ?: "fecha inválida"
-
+    val sortedFacturas = ordenarFacturasPorFecha(facturas)
+    val barras = sortedFacturas.map { factura ->
 
             Bars(
-            label = mesFormat.toString(),
+            label = formatearFechaFacturas(factura),
             values = listOf(
                 Bars.Data(
                     value = factura.kwh,
@@ -433,19 +417,17 @@ fun GraficaBarrasFacturas(facturas: List<Factura>) {
             )
         )
     }
-    val showEjeX = ejeX.take(5)
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-
-    ) {
+    val showEjeX = barras.take(5)
+    Box(modifier = Modifier.fillMaxWidth())
+    {
         ColumnChart(
-            modifier = Modifier.heightIn(min = 150.dp, max = 250.dp)
+            modifier = Modifier
+                .heightIn(min = 150.dp, max = 250.dp)
                 .padding(end = 20.dp, top = 14.dp),
             data = showEjeX,
             barProperties = BarProperties(
                 spacing = 8.dp,
-                thickness = 20.dp,
+                thickness = 24.dp,
                 style = DrawStyle.Fill
             ),
             gridProperties = GridProperties(
@@ -458,7 +440,19 @@ fun GraficaBarrasFacturas(facturas: List<Factura>) {
             ),
         )
     }
+}
 
+fun ordenarFacturasPorFecha(facturas: List<Factura>): List<Factura>{
+    //se formatean las fechas y se ordenan
+    val dateInputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    return  facturas.sortedBy { dateInputFormat.parse(it.fecha)?.time ?: 0L }
+}
+
+fun formatearFechaFacturas(factura: Factura): String{
+    val dateInputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    val dateOutputFormat = SimpleDateFormat("MMM yy", Locale.getDefault())
+    val date = dateInputFormat.parse(factura.fecha)
+    return dateOutputFormat.format(date ?: factura.fecha)
 }
 
 @Composable
@@ -486,7 +480,6 @@ fun SwitchEuroKwh(isEuroMode: Boolean, onModeChange: (Boolean) -> Unit)
             )
             Text(text = "kWh", fontSize = 12.sp, modifier = Modifier)
     }
-
 }
 
 

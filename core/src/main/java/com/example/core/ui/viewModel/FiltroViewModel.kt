@@ -17,22 +17,21 @@ import java.util.Locale
 class FiltroViewModel: ViewModel() {
 
     var fechaDesde by mutableStateOf<Long?>(null)
-//        private set
+
     var fechaHasta by mutableStateOf<Long?>(null)
-//        private set
+
     var sliderPosition by mutableStateOf(0f)
-//        private set
+
     var checkedState by mutableStateOf(List(5) { false })
-//        private set
+
+    val _errorMsg = MutableStateFlow<String?>(null)
+    val errorMsg = _errorMsg.asStateFlow()
 
     val _errorMsgDesde = MutableStateFlow<String?>(null)
     val errorMsgDesde = _errorMsgDesde.asStateFlow()
 
     val _errorMsgHasta = MutableStateFlow<String?>(null)
     val errorMsgHasta = _errorMsgHasta.asStateFlow()
-
-    val _errorMsg = MutableStateFlow<String?>(null)
-    val errorMsg = _errorMsg.asStateFlow()
 
     fun motrarMsgErrorFechaDesde(mensaje: String){
         _errorMsgDesde.value = mensaje
@@ -58,7 +57,7 @@ class FiltroViewModel: ViewModel() {
         _errorMsg.value = null
     }
 
-    fun ActualizarFechaDesde(date: Long?){
+    fun actualizarFechaDesde(date: Long?){
         if(date == null)
             return
         val hoy = Calendar.getInstance().apply {
@@ -67,15 +66,15 @@ class FiltroViewModel: ViewModel() {
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
         }.timeInMillis
-      if(date > hoy){
+        if(date > hoy){
             val msg = "Debe seleccionar una fecha válida"
             motrarMsgErrorFechaDesde(msg)
-      }else{
-          fechaDesde = date
-      }
+        }else{
+            fechaDesde = date
+        }
     }
 
-    fun ActualizarFechaHasta(date: Long?){
+    fun actualizarFechaHasta(date: Long?){
         if(date == null)
             return
         val hoy = Calendar.getInstance().apply {
@@ -92,16 +91,16 @@ class FiltroViewModel: ViewModel() {
         }
     }
 
-    fun SelectorImporte(value: Float){
+    fun selectorImporte(value: Float){
         sliderPosition = value
     }
 
-    fun SelectorEstado(index: Int, value: Boolean){
+    fun selectorEstado(index: Int, value: Boolean){
         checkedState = checkedState.toMutableList().apply { this[index] = value }
 
     }
 
-    fun ResetarFiltros(){
+    fun resetarFiltros(){
         fechaDesde = null
         fechaHasta = null
         sliderPosition = 0f
@@ -116,7 +115,7 @@ class FiltroViewModel: ViewModel() {
     }
 
     //se construye el filtro con los parametros que necesitamos para filtrar
-    fun ConstruirFiltroState(): FacturaFiltroState {
+    fun construirFiltroState(): FacturaFiltroState {
         val formatoFecha = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         val fechaDesdeState = fechaDesde?.let { formatoFecha.format(it) } ?: ""
         val fechaHastaState = fechaHasta?.let { formatoFecha.format(it) } ?: ""

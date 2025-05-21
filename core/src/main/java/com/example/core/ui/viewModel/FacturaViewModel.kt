@@ -79,7 +79,6 @@ class FacturaViewModel @Inject constructor(
 
         val formatoFecha = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
-
         return facturasOrig.filter { factura ->
             var esValido = true
 
@@ -120,7 +119,6 @@ class FacturaViewModel @Inject constructor(
                 esValido = false
             }
             esValido
-
         }
     }
 
@@ -137,6 +135,4 @@ class FacturaViewModel @Inject constructor(
      suspend fun clearAllDatabase(){
          facturasDao.deleteAllDatabase()
      }
-
-
 }
