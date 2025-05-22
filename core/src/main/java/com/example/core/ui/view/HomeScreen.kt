@@ -31,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -111,6 +112,7 @@ fun HomeScreen(
                 contentAlignment = Alignment.CenterEnd
             ) {
 
+                val colorIcono = remember { mutableStateOf(false) }
                 IconButton(
                     onClick = {
                         MockConfig.mockActive = !MockConfig.mockActive
@@ -123,14 +125,16 @@ fun HomeScreen(
                             //y luego se informa al usuario y se cargan las facturas
                             if (MockConfig.mockActive) {
                                 snackbarHostState.showSnackbar("Modo mock activado")
+                                colorIcono.value = true
                             } else {
                                 snackbarHostState.showSnackbar("Modo mock desactivado")
+                                colorIcono.value = false
                             }
                             facturaViewModel.cargarFacturas()
                         }
                     },
                     colors = IconButtonDefaults.iconButtonColors(
-                        containerColor = if (MockConfig.mockActive)
+                        containerColor = if (colorIcono.value)
                             colorResource(R.color.screen_fact_color)
                         else
                             colorResource(R.color.debug_icon_color),

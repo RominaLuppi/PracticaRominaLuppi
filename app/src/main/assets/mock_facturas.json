@@ -14,6 +14,12 @@
       "kwh": 540.00
     },
     {
+      "descEstado": "Plan de pago",
+      "importeOrdenacion": 34.5600000000000001,
+      "fecha": "24/02/2019",
+      "kwh": 48.00
+    },
+    {
       "descEstado": "Pendiente de pago",
       "importeOrdenacion": 1.5600000000000001,
       "fecha": "24/02/2019",

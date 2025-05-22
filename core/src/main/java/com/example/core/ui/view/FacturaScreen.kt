@@ -1,7 +1,6 @@
 package com.example.core.ui.view
 
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,6 +34,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -85,20 +85,25 @@ fun FacturaScreen(
     onFilterClick: () -> Unit
 
 ) {
-    //al volver a cargar la pantalla se muestran todas las facturas
-    LaunchedEffect(Unit) {
-        facturaViewModel.resetFacturas()
-    }
+
     var showDialog by remember { mutableStateOf(false) }
     val isLoading by facturaViewModel.isLoading.observeAsState(false)
-    val facturasFiltradas by sharedViewModel.facturasFiltradas.observeAsState(emptyList())
+    val facturasFiltradas by sharedViewModel.facturasFiltradas.observeAsState()
+    var facturasParaMostrar = facturasFiltradas ?: facturaViewModel.factura.value ?: emptyList()
 
-    var isEuroMode by remember { mutableStateOf(false) }
+    LaunchedEffect(facturasFiltradas) {
+        if (facturasFiltradas == null) {
+            facturaViewModel.resetFacturas()
+        }
+    }
+
+    var isSwitchKwh by remember { mutableStateOf(false) }
 
     Scaffold(
-        modifier = Modifier.background(Color.White),
+        containerColor = Color.White,
         topBar = {
             TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White),
                 title = {
                     Column(
                         verticalArrangement = Arrangement.Center,
@@ -150,24 +155,21 @@ fun FacturaScreen(
                     .padding(start = 16.dp, end = 16.dp)
                     .fillMaxWidth()
             ) {
-                SwitchEuroKwh(isEuroMode = isEuroMode, onModeChange = { isEuroMode = it })
+                SwitchEuroKwh(isSwitchKwh = isSwitchKwh, onModeChange = {isSwitchKwh = it})
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                if (!isEuroMode) GraficaLinearFacturas(
-                    facturas = facturaViewModel.factura.value ?: emptyList()
-                )
-                else GraficaBarrasFacturas(facturas = facturaViewModel.factura.value ?: emptyList())
+                if (!isSwitchKwh){
+                    GraficaLinearFacturas(facturas = facturasParaMostrar)
+                } else {
+                    GraficaBarrasFacturas(facturas = facturasParaMostrar)
+                }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
             FacturasList(
-                list = if (facturasFiltradas.isNotEmpty()) {
-                    facturasFiltradas
-                } else {
-                    facturaViewModel.factura.value ?: emptyList()
-                },
+                list = facturasParaMostrar,
                 facturaViewModel = facturaViewModel,
                 modifier = Modifier.padding(top = 16.dp, start = 16.dp),
 
@@ -197,6 +199,11 @@ fun FacturasList(
     modifier: Modifier,
     onClick: () -> Unit,
 ) {
+    val anuladas = stringResource(R.string.anuladas)
+    val pendientes = stringResource(R.string.pendientes)
+    val cuotaFija = stringResource(R.string.cuota_fija)
+    val planDePago = stringResource(R.string.plan_pago)
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -225,12 +232,12 @@ fun FacturasList(
                         text = fechaFormatter.toString(),
                         color = Color.DarkGray
                     )
-                    if (factura.descEstado == stringResource(R.string.pendientes)) {
-                        Text(
-                            text = factura.descEstado,
-                            color = Color.Red,
-                            fontSize = 13.sp
-                        )
+                    when(factura.descEstado){
+                        anuladas -> Text(text = anuladas, color = Color.DarkGray, fontSize = 14.sp)
+                        pendientes -> Text(text = pendientes, color = Color.Red, fontSize = 14.sp)
+                        cuotaFija -> Text(text = cuotaFija, color = Color.DarkGray, fontSize = 14.sp)
+                        planDePago -> Text(text = planDePago, color = Color.DarkGray, fontSize = 14.sp)
+                        else -> Text(text = "", color = Color.DarkGray, fontSize = 14.sp)
                     }
                 }
                 Row(
@@ -456,7 +463,7 @@ fun formatearFechaFacturas(factura: Factura): String{
 }
 
 @Composable
-fun SwitchEuroKwh(isEuroMode: Boolean, onModeChange: (Boolean) -> Unit)
+fun SwitchEuroKwh(isSwitchKwh: Boolean, onModeChange: (Boolean) -> Unit)
 {
         Row(
             modifier = Modifier
@@ -470,7 +477,7 @@ fun SwitchEuroKwh(isEuroMode: Boolean, onModeChange: (Boolean) -> Unit)
             Switch(
                 modifier = Modifier,
                 enabled = true,
-                checked = isEuroMode,
+                checked = isSwitchKwh,
                 onCheckedChange = { onModeChange (it) },
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = Color.White,

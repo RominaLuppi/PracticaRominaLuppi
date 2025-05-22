@@ -29,9 +29,9 @@
     <string name="title_date_hasta">Fecha hasta</string>
 
     <string name="text_por_estado">Por estado</string>
-    <string name="pagadas">Pagadas</string>
-    <string name="anuladas">Anuladas</string>
-    <string name="cuota_fija">Cuota Fija</string>
+    <string name="pagadas">Pagada</string>
+    <string name="anuladas">Anulada</string>
+    <string name="cuota_fija">Cuota fija</string>
     <string name="pendientes">Pendiente de pago</string>
     <string name="plan_pago">Plan de pago</string>
 
