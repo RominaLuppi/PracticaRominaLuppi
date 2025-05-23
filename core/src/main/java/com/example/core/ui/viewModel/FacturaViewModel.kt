@@ -1,5 +1,6 @@
 package com.example.core.ui.viewModel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -46,11 +47,13 @@ class FacturaViewModel @Inject constructor(
             _isLoading.postValue(true)
             try {
                 val result: List<Factura>? = getFacturasUseCaseData()
+                Log.d("APP", "Facturas recibidas: ${result}")
                 facturaOriginal = result ?: emptyList()
                 _factura.postValue(result ?: emptyList())
                 _maxImporte.postValue(result?.maxOfOrNull { it.importeOrdenacion }) //se saca el maximo importe
             } catch (e: Exception) {
                 _errorMsg.postValue("Error al recuperar las facturas")
+                Log.e("APP", "Error al obtener facturas", e)
             } finally {
                 _isLoading.postValue(false)
             }
