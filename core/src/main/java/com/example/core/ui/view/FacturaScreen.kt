@@ -418,6 +418,7 @@ fun GraficaBarrasFacturas(facturas: List<Factura>) {
             label = formatearFechaFacturas(factura),
             values = listOf(
                 Bars.Data(
+                    label = "kWh/mes",
                     value = factura.kwh,
                     color = SolidColor(color)
                 )
