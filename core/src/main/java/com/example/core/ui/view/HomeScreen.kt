@@ -112,7 +112,7 @@ fun HomeScreen(
                 contentAlignment = Alignment.CenterEnd
             ) {
 
-                val colorIcono = remember { mutableStateOf(false) }
+                val colorIcono = remember { mutableStateOf(MockConfig.mockActive) }
                 IconButton(
                     onClick = {
                         MockConfig.mockActive = !MockConfig.mockActive
@@ -124,11 +124,11 @@ fun HomeScreen(
 
                             //y luego se informa al usuario y se cargan las facturas
                             if (MockConfig.mockActive) {
-                                snackbarHostState.showSnackbar("Modo mock activado")
                                 colorIcono.value = true
+                                snackbarHostState.showSnackbar("Modo mock activado")
                             } else {
-                                snackbarHostState.showSnackbar("Modo mock desactivado")
                                 colorIcono.value = false
+                                snackbarHostState.showSnackbar("Modo mock desactivado")
                             }
                             facturaViewModel.cargarFacturas()
                         }
